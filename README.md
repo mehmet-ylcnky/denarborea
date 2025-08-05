@@ -11,4 +11,5 @@ A cli tool written in Rust language which allows recursively scan and display di
 * Colorized terminal output
 * File metadata, checksums & permissions
 * Configurable CLI flags
-* Built with Clap, WalkDir, Serde, and Git2
+
+Built with Clap, WalkDir, Serde, and Git2
