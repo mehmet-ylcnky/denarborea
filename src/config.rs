@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use clap::ValueEnum;
-use std::path::PathBuf;
 
 use crate::config;
 
@@ -116,5 +115,31 @@ impl Config  {
             std::fs::write(config_path, content)?;
         }
         Ok(())
+    }
+
+    pub fn get_extension(&self) -> Vec<String> {
+        match &self.filter_extension {
+            Some(ext_str) => ext_str
+                .split(',')
+                .map(|s| s.trim().to_lowercase())
+                .collect(),
+            None => Vec::new(),
+        }
+    }
+
+    pub fn matches_size_filter(&self, size:u64) -> bool {
+        if let Some(min_size) = self.min_size {
+            if size < min_size {
+                return false;
+            }
+        }
+
+        if let Some(max_size) = self.max_size {
+            if size > max_size {
+                return false;
+            }
+        }
+
+        true
     }
 }
