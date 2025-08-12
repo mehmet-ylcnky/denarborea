@@ -1,5 +1,4 @@
-use core::{num, time};
-use std::path::{self, Path};
+use std::path::Path;
 use regex::Regex;
 
 pub fn is_hidden(path: &Path) -> bool {
@@ -11,8 +10,8 @@ pub fn is_hidden(path: &Path) -> bool {
 
 pub fn get_file_extension(path: &Path) -> Option<String> {
     path.extension()
-        .and_then(|ext| ext.to_str)
-        .map(|ext| ext.to_lowecase())
+        .and_then(|ext| ext.to_str())
+        .map(|ext| ext.to_lowercase())
 }
 
 pub fn format_permissions(mode: u32) -> String {
@@ -44,7 +43,7 @@ pub fn matches_pattern(path: &Path, pattern: &str) -> bool {
     }
 
     // Fallback to simple glob-like matching
-    let pat_str = path.to_string_lossy().to_lowercase();
+    let path_str = path.to_string_lossy().to_lowercase();
     let pattern = pattern.to_lowercase();
 
     if pattern.contains("*") {
