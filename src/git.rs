@@ -28,7 +28,7 @@ impl GitStatus {
         }
     }
 
-    pub fn color(&self) -> &'static str {
+    pub fn color(&self) -> colored::Color {
         match self {
             GitStatus::Untracked => colored::Color::Red,
             GitStatus::Modified => colored::Color::Yellow,
@@ -68,5 +68,54 @@ impl GitInfo {
                 status_cache: HashMap::new(),
             }
         }
+    }
+}
+
+#[cfg(feature = "git")]
+fn load_status(&mut self) {
+    if let Some(ref repo) = self.repo {
+        let mut status_opts = git2::StatusOptions::new();
+        status_opts.include_ignored(true);
+        status_opts.include_untracked(true);
+
+        if let Ok(statuses) = repo.statuses(Some(&mut status_opts)) {
+            for entry in statuses.iter() {
+                if let Some (path) = entry.path() {
+                    let path_buf = std::path::PathBuf::from(path);
+                    let status = self.convert_status(entry.status());
+                    self.status_cache.insert(path_buf, status);
+                }
+            }
+        }
+    }
+}
+
+#[cfg(not(feature = "git"))]
+fn load_status(&mut self) {
+    // No ops for non git repositories
+}
+
+#[cfg(feature = "git")]
+fn convert_status(&self, flags: Status) -> GitStatus {
+    // Check index status first (Staged changes)
+    if flags.contains(Status::INDEX_NEW) {
+        GitStatus::Added
+    } else if flags.contains(Status::INDEX_MODIFIED) {
+        GitStatus::Modified
+    } else if flags.contains(Status::INDEX_DELETED) {
+        GitStatus::Deleted
+    } else if flags.contains(Status::INDEX_RENAMED) {
+        GitStatus::Renamed
+    }
+
+    //Check working tree status (unstaged change)
+    if flags.contains(Status::WT_NEW) {
+        GitStatus:: Added
+    } else if flags.contains(Status::WT_MODIFIED) {
+        GitStatus::Modified
+    } else if flags.contains(Status::WT_DELETED) {
+        GitStatus::Deleted
+    } else if flags.contains(Status::WT_RENAMED) {
+        GitStatus::Renamed
     }
 }
