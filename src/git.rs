@@ -40,3 +40,33 @@ impl GitStatus {
         }
     }
 }
+
+#[derive(Clone)]
+pub struct GitInfo {
+    #[cfg(feature = "git")]
+    repo: Option<std::sync::Arc<Repository>>,
+    status_cache: HashMap<std::path::PathBuf, GitStatus>,
+}
+
+impl GitInfo {
+    pub fn new(root_path: &Path) -> Self {
+        #[cfg(feature = "git")]
+        {
+            let repo = Repository::discover(root_path).ok();
+            let mut git_info = Self {
+                repo: repo.map(std::sync::Arc::new),
+                status_cache: HashMap::new(),
+            };
+
+            get_info.load_status();
+            git_info
+        }
+
+        #[cfg(not(feature = "git"))]
+        {
+            Self {
+                status_cache: HashMap::new(),
+            }
+        }
+    }
+}

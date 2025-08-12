@@ -17,7 +17,7 @@ pub enum SortBy {
     Type
 }
 
-#[derive(Debug, Clone, ValueEnum, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, ValueEnum, Serialize, Deserialize)]
 pub enum OutputFormat {
     #[value(name = "tree")]
     Tree,
