@@ -1,6 +1,5 @@
 use crate::{Config, OutputFormat, Result, git::GitInfo, utils};
 use colored::*;
-use crossterm::style::Stylize;
 use humansize::{DECIMAL, format_size};
 use std::fs;
 use std::path::{Path, PathBuf};
