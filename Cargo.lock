@@ -259,6 +259,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "denarborea"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "clap",
+ "colored",
+ "crossterm",
+ "dirs",
+ "git2",
+ "humansize",
+ "ignore",
+ "md5",
+ "regex",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "toml",
+ "walkdir",
+]
+
+[[package]]
 name = "derive_more"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1132,27 +1153,6 @@ name = "toml_writer"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fcc842091f2def52017664b53082ecbbeb5c7731092bad69d2c63050401dfd64"
-
-[[package]]
-name = "tree-visualizer"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "clap",
- "colored",
- "crossterm",
- "dirs",
- "git2",
- "humansize",
- "ignore",
- "md5",
- "regex",
- "serde",
- "serde_json",
- "tempfile",
- "toml",
- "walkdir",
-]
 
 [[package]]
 name = "unicode-ident"
