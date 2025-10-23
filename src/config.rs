@@ -93,7 +93,7 @@ impl Default for Config {
 impl Config  {
     pub fn load_from_file() -> crate::Result<Option<Self>> {
         if let Some(config_dir) = dirs::config_dir() {
-            let config_path = config_dir.join("tree-visualizer").join("config.toml");
+            let config_path = config_dir.join("denarborea").join("config.toml");
             if config_path.exists() {
                 let content = std::fs::read_to_string(config_path)?;
                 let config: Config = toml::from_str(&content)?;
@@ -105,7 +105,7 @@ impl Config  {
 
     pub fn save_to_file(&self) -> crate::Result<()> {
         if let Some(config_dir) = dirs::config_dir() {
-            let tree_config_dir = config_dir.join("tree-visualier");
+            let tree_config_dir = config_dir.join("denarborea");
             std::fs::create_dir_all(&tree_config_dir)?;
 
             let config_path = tree_config_dir.join("config.toml");
