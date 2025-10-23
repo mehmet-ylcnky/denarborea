@@ -411,11 +411,3 @@ cargo build --release
 # Without git support
 cargo build --release --no-default-features
 ```
-
-## License
-
-MIT
-
-## Contributing
-
-Contributions welcome! Please open an issue or submit a pull request.
