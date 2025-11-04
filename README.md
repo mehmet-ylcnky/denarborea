@@ -12,9 +12,9 @@ While watching my daughter, Dena, exploring the plants near our home, I noticed 
 
 Her observation reminded me of the Unix `tree` command that has served well for decades for developers who spend their daily life in `Terminal` (including myself). Directory structures are just like trees—each folder a branch, each file a leaf, all connected in a hierarchy that makes sense once you can see it clearly.
 
-But as projects grew more complex, I found myself wanting more: *What if I could see which files changed in Git? What if I could filter by size or extension? What if I could export the structure as JSON for documentation?*
+I found myself wanting more: *What if I could see which files changed in Git? What if I could filter by size or extension? What if I could export the structure as JSON for documentation?*
 
-That's when Dena's love for trees and my developer needs came together. **DenArborea** combines my daughter's name with *arborea* (Latin for "tree-like"), creating a tool that builds upon the classic `tree` command with modern features:
+That's when Dena's love for plants and my developer needs came together. **DenArborea** combines my daughter's name with *arborea* (Latin for "tree-like"), creating a tool that builds upon the classic `tree` command with modern features:
 - **Git integration** to see modified files at a glance (`--git-status`)
 - **Smart filtering** to find large files or specific extensions (`--min-size 100MB -e rs`)
 - **Multiple output formats** for documentation and automation (`--format json`)
