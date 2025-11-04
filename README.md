@@ -1,5 +1,3 @@
-# DenArborea 🌿
-
 <div align="center">
 <img src="denarborea.png" alt="DenArborea Logo" width="220">
 </div>
