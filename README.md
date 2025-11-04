@@ -7,22 +7,7 @@
 [![CI](https://github.com/mehmet-ylcnky/denarborea/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmet-ylcnky/denarborea/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/mehmet-ylcnky/denarborea/branch/main/graph/badge.svg)](https://codecov.io/gh/mehmet-ylcnky/denarborea)
 [![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-[![Crates.io](https://img.shields.io/crates/v/denarborea.svg)](https://crates.io/crates/denarborea)
-[![Downloads](https://img.shields.io/crates/d/denarborea.svg)](https://crates.io/crates/denarborea)
-[![Docs.rs](https://docs.rs/denarborea/badge.svg)](https://docs.rs/denarborea)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mehmet-ylcnky/denarborea/graphs/commit-activity)
-
-[![Linux](https://img.shields.io/badge/Linux-supported-success)](https://github.com/mehmet-ylcnky/denarborea)
-[![macOS](https://img.shields.io/badge/macOS-supported-success)](https://github.com/mehmet-ylcnky/denarborea)
-[![Windows](https://img.shields.io/badge/Windows-supported-success)](https://github.com/mehmet-ylcnky/denarborea)
 [![Clippy](https://img.shields.io/badge/clippy-passing-brightgreen)](https://github.com/mehmet-ylcnky/denarborea)
-
-[![GitHub issues](https://img.shields.io/github/issues/mehmet-ylcnky/denarborea.svg)](https://github.com/mehmet-ylcnky/denarborea/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/mehmet-ylcnky/denarborea.svg)](https://github.com/mehmet-ylcnky/denarborea/pulls)
-[![GitHub stars](https://img.shields.io/github/stars/mehmet-ylcnky/denarborea.svg?style=social)](https://github.com/mehmet-ylcnky/denarborea/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/mehmet-ylcnky/denarborea.svg?style=social)](https://github.com/mehmet-ylcnky/denarborea/network/members)
 
 </div>
 
