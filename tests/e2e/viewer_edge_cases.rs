@@ -1,6 +1,8 @@
 use assert_cmd::Command;
 use predicates::prelude::*;
 use std::fs;
+
+#[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
 
 use crate::common::test_helpers::TestFixture;
@@ -338,6 +340,7 @@ fn test_view_malformed_toml() {
 
 // File permission edge cases
 #[test]
+#[cfg(unix)]
 fn test_view_unreadable_file() {
     let fixture = TestFixture::new();
     let file_path = fixture.create_file("secret.txt", "secret content");
