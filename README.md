@@ -1,5 +1,5 @@
 <div align="center">
-<img src="denarborea.png" alt="DenArborea Logo" width="220">
+<img src="denarborea.png" alt="DenArborea Logo" width="300">
 </div>
 
 A directory visualizer written in Rust with advanced filtering, Git integration, and multiple output formats.
