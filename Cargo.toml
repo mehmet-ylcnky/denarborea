@@ -24,6 +24,7 @@ syntect = "5.1"
 parquet = "53.0"
 arrow = "53.0"
 arrow-array = "53.0"
+memmap2 = "0.9"
 
 [features]
 default = ["git"]
@@ -34,5 +35,9 @@ tempfile = "3.0"
 assert_cmd = "2.0"
 predicates = "3.0"
 proptest = "1.0"
-criterion = "0.5"
+criterion = { version = "0.5", features = ["html_reports"] }
 mockall = "0.11"
+
+[[bench]]
+name = "large_file_benchmark"
+harness = false

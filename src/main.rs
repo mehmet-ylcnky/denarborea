@@ -1,7 +1,7 @@
 use clap::{Parser, ValueEnum};
 use denarborea::{
     utils::parse_size, Config, FileViewer, OutputFormat, Result, SortBy, TreeVisualizer,
-    ViewerFormat,
+    ViewerFormat, ViewerStrategy,
 };
 use std::path::PathBuf;
 
@@ -199,6 +199,22 @@ struct Cli {
     /// CSV delimiter character
     #[arg(long, default_value = ",", help = "Delimiter for CSV files")]
     delimiter: String,
+
+    /// Force memory-mapped viewing for large files
+    #[arg(long, help = "Force memory-mapped file viewing")]
+    memory_mapped: bool,
+
+    /// Force streaming mode for large files
+    #[arg(long, help = "Force streaming mode for file viewing")]
+    streaming: bool,
+
+    /// Preview size for very large files (in KB)
+    #[arg(
+        long,
+        default_value = "64",
+        help = "Preview size for large files in KB"
+    )]
+    preview_size: usize,
 }
 
 fn main() -> Result<()> {
@@ -207,9 +223,20 @@ fn main() -> Result<()> {
     // Handle file viewer mode
     if let Some(file_path) = cli.view {
         let delimiter = cli.delimiter.chars().next().unwrap_or(',');
-        let viewer = FileViewer::new(cli.viewer_format.into())
+        let mut viewer = FileViewer::new(cli.viewer_format.into())
             .with_limits(Some(cli.max_lines), Some(cli.max_bytes))
             .with_delimiter(delimiter);
+
+        // Apply large file options
+        if cli.memory_mapped {
+            viewer = viewer.with_strategy(ViewerStrategy::MemoryMapped);
+        } else if cli.streaming {
+            viewer = viewer.with_strategy(ViewerStrategy::Streaming);
+        }
+
+        if cli.preview_size != 64 {
+            viewer = viewer.with_preview_size(cli.preview_size * 1024); // Convert KB to bytes
+        }
 
         match viewer.view_file(&file_path) {
             Ok(content) => {

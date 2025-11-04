@@ -1,5 +1,6 @@
 pub mod binary;
 pub mod csv_viewer;
+pub mod large_file;
 pub mod parquet_viewer;
 pub mod structured;
 pub mod text;
@@ -19,11 +20,21 @@ pub enum ViewerFormat {
     Parquet,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub enum ViewerStrategy {
+    Auto,
+    FullLoad,
+    Streaming,
+    MemoryMapped,
+}
+
 #[derive(Debug, Clone)]
 pub struct ViewerOptions {
     pub max_lines: Option<usize>,
     pub max_bytes: Option<usize>,
     pub delimiter: char,
+    pub strategy: ViewerStrategy,
+    pub preview_size: usize,
 }
 
 impl Default for ViewerOptions {
@@ -32,6 +43,8 @@ impl Default for ViewerOptions {
             max_lines: Some(100),
             max_bytes: Some(1024 * 1024), // 1MB
             delimiter: ',',
+            strategy: ViewerStrategy::Auto,
+            preview_size: 64 * 1024, // 64KB
         }
     }
 }
@@ -41,6 +54,8 @@ pub struct FileViewer {
     max_lines: Option<usize>,
     max_bytes: Option<usize>,
     delimiter: char,
+    strategy: ViewerStrategy,
+    preview_size: usize,
 }
 
 impl FileViewer {
@@ -50,6 +65,8 @@ impl FileViewer {
             max_lines: Some(100),
             max_bytes: Some(1024 * 1024), // 1MB
             delimiter: ',',
+            strategy: ViewerStrategy::Auto,
+            preview_size: 64 * 1024, // 64KB
         }
     }
 
@@ -64,21 +81,90 @@ impl FileViewer {
         self
     }
 
+    pub fn with_strategy(mut self, strategy: ViewerStrategy) -> Self {
+        self.strategy = strategy;
+        self
+    }
+
+    pub fn with_preview_size(mut self, preview_size: usize) -> Self {
+        self.preview_size = preview_size;
+        self
+    }
+
     pub fn view_file(&self, path: &Path) -> Result<String> {
         let format = match self.format {
             ViewerFormat::Auto => detect_format(path, None),
             _ => self.format.clone(),
         };
 
+        // Determine strategy based on file size and user preference
+        let metadata = std::fs::metadata(path)?;
+        let file_size = metadata.len();
+
+        let strategy = match self.strategy {
+            ViewerStrategy::Auto => self.determine_auto_strategy(file_size, &format),
+            _ => self.strategy.clone(),
+        };
+
         match format {
-            ViewerFormat::Text => text::view_text_file(path, self.max_lines),
+            ViewerFormat::Text => self.view_text_with_strategy(path, strategy),
             ViewerFormat::Binary => binary::view_binary_file(path, self.max_bytes),
-            ViewerFormat::Json => structured::view_json_file(path),
+            ViewerFormat::Json => self.view_json_with_strategy(path, strategy),
             ViewerFormat::Yaml => structured::view_yaml_file(path),
             ViewerFormat::Toml => structured::view_toml_file(path),
-            ViewerFormat::Csv => csv_viewer::view_csv_file(path, self.max_lines, self.delimiter),
+            ViewerFormat::Csv => self.view_csv_with_strategy(path, strategy),
             ViewerFormat::Parquet => parquet_viewer::view_parquet_file(path, self.max_lines),
             ViewerFormat::Auto => unreachable!(),
+        }
+    }
+
+    fn determine_auto_strategy(&self, file_size: u64, format: &ViewerFormat) -> ViewerStrategy {
+        let threshold = match format {
+            ViewerFormat::Json => 10_000_000,  // 10MB
+            ViewerFormat::Csv => 50_000_000,   // 50MB
+            ViewerFormat::Text => 100_000_000, // 100MB
+            _ => 50_000_000,                   // Default 50MB
+        };
+
+        if file_size > threshold {
+            ViewerStrategy::MemoryMapped
+        } else if file_size > 1_000_000 {
+            // 1MB
+            ViewerStrategy::Streaming
+        } else {
+            ViewerStrategy::FullLoad
+        }
+    }
+
+    fn view_text_with_strategy(&self, path: &Path, strategy: ViewerStrategy) -> Result<String> {
+        match strategy {
+            ViewerStrategy::FullLoad => text::view_text_file(path, self.max_lines),
+            ViewerStrategy::Streaming | ViewerStrategy::MemoryMapped => {
+                large_file::view_large_text(path, self.max_lines)
+            }
+            ViewerStrategy::Auto => unreachable!(),
+        }
+    }
+
+    fn view_json_with_strategy(&self, path: &Path, strategy: ViewerStrategy) -> Result<String> {
+        match strategy {
+            ViewerStrategy::FullLoad => structured::view_json_file(path),
+            ViewerStrategy::Streaming | ViewerStrategy::MemoryMapped => {
+                large_file::view_large_json(path, self.max_lines)
+            }
+            ViewerStrategy::Auto => unreachable!(),
+        }
+    }
+
+    fn view_csv_with_strategy(&self, path: &Path, strategy: ViewerStrategy) -> Result<String> {
+        match strategy {
+            ViewerStrategy::FullLoad => {
+                csv_viewer::view_csv_file(path, self.max_lines, self.delimiter)
+            }
+            ViewerStrategy::Streaming | ViewerStrategy::MemoryMapped => {
+                large_file::view_large_csv(path, self.max_lines)
+            }
+            ViewerStrategy::Auto => unreachable!(),
         }
     }
 }

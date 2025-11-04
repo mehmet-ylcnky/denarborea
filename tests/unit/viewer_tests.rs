@@ -1,4 +1,5 @@
 use denarborea::viewer::*;
+use denarborea::ViewerStrategy;
 use std::fs;
 use std::path::Path;
 use tempfile::TempDir;
@@ -335,9 +336,13 @@ fn test_viewer_options_with_limits() {
         max_lines: Some(10),
         max_bytes: Some(1024),
         delimiter: ';',
+        strategy: ViewerStrategy::Streaming,
+        preview_size: 32 * 1024,
     };
 
     assert_eq!(options.max_lines, Some(10));
     assert_eq!(options.max_bytes, Some(1024));
     assert_eq!(options.delimiter, ';');
+    assert_eq!(options.strategy, ViewerStrategy::Streaming);
+    assert_eq!(options.preview_size, 32 * 1024);
 }
