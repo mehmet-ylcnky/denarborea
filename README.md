@@ -413,7 +413,3 @@ cargo build --release
 # Without git support
 cargo build --release --no-default-features
 ```
-
-## Acknowledgments
-
-• Special thanks to [AarambhDevHub](https://www.youtube.com/@AarambhDevHub) for the helpful video tutorials that assisted in the development of this project.
