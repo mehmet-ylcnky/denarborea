@@ -1,6 +1,6 @@
 # DenArborea 🌿
 
-![DenArborea Logo](denarborea.png)
+<img src="denarborea.png" alt="DenArborea Logo" width="200">
 
 A directory visualizer written in Rust with advanced filtering, Git integration, and multiple output formats.
 
