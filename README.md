@@ -1,5 +1,7 @@
 # DenArborea 🌿
 
+![DenArborea Logo](denarborea.png)
+
 A directory visualizer written in Rust with advanced filtering, Git integration, and multiple output formats.
 
 ## Inspiration
