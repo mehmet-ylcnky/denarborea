@@ -12,7 +12,15 @@
 
 </div>
 
+<div align="center">
+
 A directory visualizer written in Rust with advanced filtering, Git integration, and multiple output formats.
+
+</div>
+
+**DenArborea** is a modern command-line directory visualization tool that extends the classic Unix `tree` command with powerful features for developers and system administrators. Built in Rust for performance and reliability, it provides an intuitive way to explore, analyze, and document directory structures with advanced filtering, Git integration, and multiple export formats.
+
+Whether you're navigating complex codebases, analyzing disk usage, documenting project structures, or integrating with CI/CD pipelines, DenArborea transforms directory exploration from a simple listing into a comprehensive analysis tool. With built-in file content viewing, Git status integration, and export capabilities, it bridges the gap between basic file system navigation and advanced project analysis.
 
 ## Installation
 
