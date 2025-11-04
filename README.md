@@ -2,6 +2,9 @@
 <img src="denarborea.png" alt="DenArborea Logo" width="300">
 </div>
 
+[![CI](https://github.com/mehmet-ylcnky/denarborea/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmet-ylcnky/denarborea/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/mehmet-ylcnky/denarborea/branch/main/graph/badge.svg)](https://codecov.io/gh/mehmet-ylcnky/denarborea)
+
 A directory visualizer written in Rust with advanced filtering, Git integration, and multiple output formats.
 
 ## Inspiration

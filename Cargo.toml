@@ -25,3 +25,8 @@ git = ["git2"]
 
 [dev-dependencies]
 tempfile = "3.0"
+assert_cmd = "2.0"
+predicates = "3.0"
+proptest = "1.0"
+criterion = "0.5"
+mockall = "0.11"
