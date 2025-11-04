@@ -55,7 +55,7 @@ pub fn view_parquet_file(path: &Path, max_rows: Option<usize>) -> Result<String>
         }
         Err(e) => {
             output.push_str(&format!("Error reading data: {}\n", e));
-            
+
             // Fallback to metadata-only view
             output.push_str("Row Groups:\n");
             for i in 0..metadata.num_row_groups() {
@@ -77,38 +77,38 @@ fn read_parquet_data(path: &Path, max_rows: Option<usize>) -> Result<String> {
     let file = File::open(path)?;
     let builder = ParquetRecordBatchReaderBuilder::try_new(file)?;
     let reader = builder.build()?;
-    
+
     let mut output = String::new();
     let mut total_rows_shown = 0;
     let max_display_rows = max_rows.unwrap_or(10);
-    
+
     // Read record batches
     let mut batches = Vec::new();
     for batch_result in reader {
         let batch = batch_result?;
         batches.push(batch);
-        
+
         if total_rows_shown >= max_display_rows {
             break;
         }
     }
-    
+
     if batches.is_empty() {
         output.push_str("No data found in parquet file.\n");
         return Ok(output);
     }
-    
+
     // Get schema from first batch
     let schema = batches[0].schema();
     let column_names: Vec<String> = schema.fields().iter().map(|f| f.name().clone()).collect();
-    
+
     output.push_str("Data:\n");
     output.push_str("─".repeat(80).as_str());
     output.push('\n');
-    
+
     // Calculate column widths
     let mut col_widths: Vec<usize> = column_names.iter().map(|name| name.len().max(10)).collect();
-    
+
     // Sample some data to determine better column widths
     for batch in &batches {
         for (col_idx, column) in batch.columns().iter().enumerate() {
@@ -121,7 +121,7 @@ fn read_parquet_data(path: &Path, max_rows: Option<usize>) -> Result<String> {
             }
         }
     }
-    
+
     // Print headers
     output.push('│');
     for (i, name) in column_names.iter().enumerate() {
@@ -132,7 +132,7 @@ fn read_parquet_data(path: &Path, max_rows: Option<usize>) -> Result<String> {
         ));
     }
     output.push('\n');
-    
+
     // Print separator
     output.push('├');
     for (i, &width) in col_widths.iter().enumerate() {
@@ -142,14 +142,14 @@ fn read_parquet_data(path: &Path, max_rows: Option<usize>) -> Result<String> {
         }
     }
     output.push_str("┤\n");
-    
+
     // Print data rows
     for batch in &batches {
         for row_idx in 0..batch.num_rows() {
             if total_rows_shown >= max_display_rows {
                 break;
             }
-            
+
             output.push('│');
             for (col_idx, column) in batch.columns().iter().enumerate() {
                 let value_str = format_array_value(column, row_idx);
@@ -162,36 +162,36 @@ fn read_parquet_data(path: &Path, max_rows: Option<usize>) -> Result<String> {
             output.push('\n');
             total_rows_shown += 1;
         }
-        
+
         if total_rows_shown >= max_display_rows {
             break;
         }
     }
-    
+
     output.push('\n');
     output.push_str(&format!(
         "📈 Summary: {} columns, {} rows shown",
         column_names.len(),
         total_rows_shown
     ));
-    
+
     if let Some(max) = max_rows {
         if total_rows_shown >= max {
             output.push_str(&format!(" (limited to {} rows)", max));
         }
     }
     output.push('\n');
-    
+
     Ok(output)
 }
 
 fn format_array_value(array: &Arc<dyn Array>, row_idx: usize) -> String {
     use arrow_array::*;
-    
+
     if array.is_null(row_idx) {
         return "null".to_string();
     }
-    
+
     match array.data_type() {
         arrow::datatypes::DataType::Boolean => {
             let array = array.as_any().downcast_ref::<BooleanArray>().unwrap();

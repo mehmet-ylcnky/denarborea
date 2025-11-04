@@ -96,9 +96,7 @@ pub fn detect_format(path: &Path, override_format: Option<ViewerFormat>) -> View
             "toml" => ViewerFormat::Toml,
             "csv" => ViewerFormat::Csv,
             "parquet" => ViewerFormat::Parquet,
-            "txt" | "md" | "rs" | "py" | "js" | "ts" | "html" | "css" | "xml" => {
-                ViewerFormat::Text
-            }
+            "txt" | "md" | "rs" | "py" | "js" | "ts" | "html" | "css" | "xml" => ViewerFormat::Text,
             _ => {
                 if is_binary_file(path) {
                     ViewerFormat::Binary
@@ -146,16 +144,20 @@ pub fn format_file_size(bytes: u64) -> String {
     }
 }
 
-pub fn truncate_content(content: &str, max_lines: Option<usize>, max_bytes: Option<usize>) -> String {
+pub fn truncate_content(
+    content: &str,
+    max_lines: Option<usize>,
+    max_bytes: Option<usize>,
+) -> String {
     let mut result = content;
-    
+
     // Apply byte limit first
     if let Some(max_bytes) = max_bytes {
         if content.len() > max_bytes {
             result = &content[..max_bytes];
         }
     }
-    
+
     // Apply line limit
     if let Some(max_lines) = max_lines {
         let lines: Vec<&str> = result.lines().take(max_lines).collect();
@@ -180,15 +182,18 @@ pub fn escape_control_chars(s: &str) -> String {
 pub fn detect_csv_delimiter(content: &str) -> char {
     let delimiters = [',', ';', '\t', '|'];
     let mut counts = [0; 4];
-    
+
     for line in content.lines().take(5) {
         for (i, &delim) in delimiters.iter().enumerate() {
             counts[i] += line.matches(delim).count();
         }
     }
-    
+
     // Return delimiter with highest count, fallback to comma
-    delimiters[counts.iter().position(|&x| x == *counts.iter().max().unwrap()).unwrap_or(0)]
+    delimiters[counts
+        .iter()
+        .position(|&x| x == *counts.iter().max().unwrap())
+        .unwrap_or(0)]
 }
 
 pub fn highlight_syntax(code: &str, language: &str) -> String {
@@ -230,11 +235,11 @@ pub fn parse_toml_content(content: &str) -> String {
 
 pub fn format_hex_dump(data: &[u8], offset: usize) -> String {
     let mut result = String::new();
-    
+
     for (i, chunk) in data.chunks(16).enumerate() {
         let addr = offset + i * 16;
         result.push_str(&format!("{:08x}  ", addr));
-        
+
         // Hex bytes
         for (j, &byte) in chunk.iter().enumerate() {
             if j == 8 {
@@ -242,7 +247,7 @@ pub fn format_hex_dump(data: &[u8], offset: usize) -> String {
             }
             result.push_str(&format!("{:02x} ", byte));
         }
-        
+
         // Padding for incomplete lines
         for j in chunk.len()..16 {
             if j == 8 {
@@ -250,9 +255,9 @@ pub fn format_hex_dump(data: &[u8], offset: usize) -> String {
             }
             result.push_str("   ");
         }
-        
+
         result.push_str(" |");
-        
+
         // ASCII representation
         for &byte in chunk {
             if byte.is_ascii_graphic() || byte == b' ' {
@@ -261,10 +266,10 @@ pub fn format_hex_dump(data: &[u8], offset: usize) -> String {
                 result.push('.');
             }
         }
-        
+
         result.push_str("|\n");
     }
-    
+
     result
 }
 
@@ -285,28 +290,36 @@ pub fn detect_binary_file_type(data: &[u8]) -> &'static str {
 pub fn parse_csv_content(content: &str, delimiter: char) -> String {
     use csv::ReaderBuilder;
     use std::io::Cursor;
-    
+
     let mut reader = ReaderBuilder::new()
         .has_headers(true)
         .delimiter(delimiter as u8)
         .from_reader(Cursor::new(content));
-    
+
     let mut result = String::new();
-    
+
     // Get headers
     if let Ok(headers) = reader.headers() {
-        result.push_str(&format!("Headers: {}\n", headers.iter().collect::<Vec<_>>().join(", ")));
-        
+        result.push_str(&format!(
+            "Headers: {}\n",
+            headers.iter().collect::<Vec<_>>().join(", ")
+        ));
+
         // Read a few rows
         for (i, record_result) in reader.records().enumerate() {
-            if i >= 5 { break; } // Limit for testing
-            
+            if i >= 5 {
+                break;
+            } // Limit for testing
+
             if let Ok(record) = record_result {
-                result.push_str(&format!("Row {}: {}\n", i + 1, 
-                    record.iter().collect::<Vec<_>>().join(", ")));
+                result.push_str(&format!(
+                    "Row {}: {}\n",
+                    i + 1,
+                    record.iter().collect::<Vec<_>>().join(", ")
+                ));
             }
         }
     }
-    
+
     result
 }

@@ -23,14 +23,35 @@ impl TestSetup {
 
 #[test]
 fn test_detect_format_by_extension() {
-    assert_eq!(detect_format(Path::new("test.json"), None), ViewerFormat::Json);
-    assert_eq!(detect_format(Path::new("test.csv"), None), ViewerFormat::Csv);
-    assert_eq!(detect_format(Path::new("test.yaml"), None), ViewerFormat::Yaml);
-    assert_eq!(detect_format(Path::new("test.yml"), None), ViewerFormat::Yaml);
-    assert_eq!(detect_format(Path::new("test.toml"), None), ViewerFormat::Toml);
-    assert_eq!(detect_format(Path::new("test.txt"), None), ViewerFormat::Text);
+    assert_eq!(
+        detect_format(Path::new("test.json"), None),
+        ViewerFormat::Json
+    );
+    assert_eq!(
+        detect_format(Path::new("test.csv"), None),
+        ViewerFormat::Csv
+    );
+    assert_eq!(
+        detect_format(Path::new("test.yaml"), None),
+        ViewerFormat::Yaml
+    );
+    assert_eq!(
+        detect_format(Path::new("test.yml"), None),
+        ViewerFormat::Yaml
+    );
+    assert_eq!(
+        detect_format(Path::new("test.toml"), None),
+        ViewerFormat::Toml
+    );
+    assert_eq!(
+        detect_format(Path::new("test.txt"), None),
+        ViewerFormat::Text
+    );
     // .bin extension defaults to Text since file doesn't exist to check if binary
-    assert_eq!(detect_format(Path::new("test.bin"), None), ViewerFormat::Text);
+    assert_eq!(
+        detect_format(Path::new("test.bin"), None),
+        ViewerFormat::Text
+    );
 }
 
 #[test]
@@ -48,32 +69,44 @@ fn test_detect_format_override() {
 #[test]
 fn test_detect_format_no_extension() {
     assert_eq!(detect_format(Path::new("noext"), None), ViewerFormat::Text);
-    assert_eq!(detect_format(Path::new("path/noext"), None), ViewerFormat::Text);
+    assert_eq!(
+        detect_format(Path::new("path/noext"), None),
+        ViewerFormat::Text
+    );
 }
 
 #[test]
 fn test_detect_format_case_insensitive() {
-    assert_eq!(detect_format(Path::new("test.JSON"), None), ViewerFormat::Json);
-    assert_eq!(detect_format(Path::new("test.CSV"), None), ViewerFormat::Csv);
-    assert_eq!(detect_format(Path::new("test.YAML"), None), ViewerFormat::Yaml);
+    assert_eq!(
+        detect_format(Path::new("test.JSON"), None),
+        ViewerFormat::Json
+    );
+    assert_eq!(
+        detect_format(Path::new("test.CSV"), None),
+        ViewerFormat::Csv
+    );
+    assert_eq!(
+        detect_format(Path::new("test.YAML"), None),
+        ViewerFormat::Yaml
+    );
 }
 
 #[test]
 fn test_is_binary_file_detection() {
     let setup = TestSetup::new();
-    
+
     // Text file
     let text_file = setup.create_file("text.txt", b"Hello World\nLine 2");
     assert!(!is_binary_file(&text_file));
-    
+
     // Binary file with null bytes
     let binary_file = setup.create_file("binary.bin", &[0x00, 0x01, 0xFF, 0x80]);
     assert!(is_binary_file(&binary_file));
-    
+
     // Mixed content (should be detected as binary due to null bytes)
     let mixed_file = setup.create_file("mixed.dat", b"Hello\x00World");
     assert!(is_binary_file(&mixed_file));
-    
+
     // UTF-8 with high bytes (should not be binary)
     let utf8_file = setup.create_file("utf8.txt", "Hello 世界 🌍".as_bytes());
     assert!(!is_binary_file(&utf8_file));
@@ -92,8 +125,11 @@ fn test_format_file_size() {
 #[test]
 fn test_truncate_content_by_lines() {
     let content = "Line 1\nLine 2\nLine 3\nLine 4\nLine 5";
-    
-    assert_eq!(truncate_content(content, Some(3), None), "Line 1\nLine 2\nLine 3");
+
+    assert_eq!(
+        truncate_content(content, Some(3), None),
+        "Line 1\nLine 2\nLine 3"
+    );
     assert_eq!(truncate_content(content, Some(0), None), "");
     assert_eq!(truncate_content(content, Some(10), None), content);
     assert_eq!(truncate_content(content, None, None), content);
@@ -102,7 +138,7 @@ fn test_truncate_content_by_lines() {
 #[test]
 fn test_truncate_content_by_bytes() {
     let content = "Hello World";
-    
+
     assert_eq!(truncate_content(content, None, Some(5)), "Hello");
     assert_eq!(truncate_content(content, None, Some(0)), "");
     assert_eq!(truncate_content(content, None, Some(100)), content);
@@ -111,19 +147,25 @@ fn test_truncate_content_by_bytes() {
 #[test]
 fn test_truncate_content_both_limits() {
     let content = "Line 1\nLine 2\nLine 3\nLine 4";
-    
+
     // Bytes limit should take precedence if smaller
     assert_eq!(truncate_content(content, Some(5), Some(10)), "Line 1\nLin");
-    
+
     // Lines limit should take precedence if smaller
-    assert_eq!(truncate_content(content, Some(2), Some(100)), "Line 1\nLine 2");
+    assert_eq!(
+        truncate_content(content, Some(2), Some(100)),
+        "Line 1\nLine 2"
+    );
 }
 
 #[test]
 fn test_escape_control_characters() {
     assert_eq!(escape_control_chars("Hello\nWorld"), "Hello\\nWorld");
     assert_eq!(escape_control_chars("Tab\tSeparated"), "Tab\\tSeparated");
-    assert_eq!(escape_control_chars("Carriage\rReturn"), "Carriage\\rReturn");
+    assert_eq!(
+        escape_control_chars("Carriage\rReturn"),
+        "Carriage\\rReturn"
+    );
     assert_eq!(escape_control_chars("Bell\x07Sound"), "Bell\\x07Sound");
     assert_eq!(escape_control_chars("Normal text"), "Normal text");
 }
@@ -203,7 +245,7 @@ fn test_parse_toml_invalid() {
 fn test_format_hex_dump() {
     let data = vec![0x48, 0x65, 0x6C, 0x6C, 0x6F]; // "Hello"
     let result = format_hex_dump(&data, 0);
-    
+
     assert!(result.contains("48 65 6c 6c 6f")); // lowercase hex
     assert!(result.contains("Hello"));
     assert!(result.contains("00000000"));
@@ -213,7 +255,7 @@ fn test_format_hex_dump() {
 fn test_format_hex_dump_with_offset() {
     let data = vec![0x41, 0x42, 0x43]; // "ABC"
     let result = format_hex_dump(&data, 16);
-    
+
     assert!(result.contains("41 42 43"));
     assert!(result.contains("ABC"));
     assert!(result.contains("00000010")); // offset 16 in hex
@@ -223,7 +265,7 @@ fn test_format_hex_dump_with_offset() {
 fn test_format_hex_dump_non_printable() {
     let data = vec![0x00, 0x01, 0xFF, 0x80];
     let result = format_hex_dump(&data, 0);
-    
+
     assert!(result.contains("00 01 ff 80")); // lowercase hex
     assert!(result.contains("...."));
 }
@@ -233,15 +275,15 @@ fn test_detect_binary_file_type() {
     // PNG signature
     let png_data = vec![0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
     assert_eq!(detect_binary_file_type(&png_data), "PNG Image");
-    
+
     // JPEG signature
     let jpeg_data = vec![0xFF, 0xD8, 0xFF];
     assert_eq!(detect_binary_file_type(&jpeg_data), "JPEG Image");
-    
+
     // PDF signature
     let pdf_data = b"%PDF-1.4".to_vec();
     assert_eq!(detect_binary_file_type(&pdf_data), "PDF Document");
-    
+
     // Unknown binary
     let unknown_data = vec![0x12, 0x34, 0x56, 0x78];
     assert_eq!(detect_binary_file_type(&unknown_data), "Unknown Binary");
@@ -251,7 +293,7 @@ fn test_detect_binary_file_type() {
 fn test_parse_csv_with_custom_delimiter() {
     let csv_content = "name;age;city\nJohn;30;NYC\nJane;25;LA";
     let result = parse_csv_content(csv_content, ';');
-    
+
     assert!(result.contains("name"));
     assert!(result.contains("John"));
     assert!(result.contains("30"));
@@ -264,7 +306,7 @@ fn test_parse_csv_with_quotes() {
 "John Doe","A person with ""quotes"""
 "Jane, Smith","Has comma in name""#;
     let result = parse_csv_content(csv_content, ',');
-    
+
     assert!(result.contains("John Doe"));
     assert!(result.contains("Jane, Smith"));
 }
@@ -273,7 +315,7 @@ fn test_parse_csv_with_quotes() {
 fn test_parse_csv_empty_fields() {
     let csv_content = "a,b,c\n1,,3\n,2,";
     let result = parse_csv_content(csv_content, ',');
-    
+
     assert!(result.contains("a"));
     assert!(result.contains("1"));
     assert!(result.contains("3"));
@@ -294,7 +336,7 @@ fn test_viewer_options_with_limits() {
         max_bytes: Some(1024),
         delimiter: ';',
     };
-    
+
     assert_eq!(options.max_lines, Some(10));
     assert_eq!(options.max_bytes, Some(1024));
     assert_eq!(options.delimiter, ';');
