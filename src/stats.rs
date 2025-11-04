@@ -1,5 +1,5 @@
 use crate::FileInfo;
-use humansize::{DECIMAL, format_size};
+use humansize::{format_size, DECIMAL};
 use std::collections::HashMap;
 
 #[derive(Debug, Default)]
@@ -19,9 +19,9 @@ impl TreeStats {
         Self::default()
     }
 
-    pub fn add_file(&mut self, info:&FileInfo) {
+    pub fn add_file(&mut self, info: &FileInfo) {
         if info.is_dir {
-            self.total_dirs +=1;
+            self.total_dirs += 1;
         } else {
             self.total_files += 1;
             self.total_size += info.size;
@@ -34,7 +34,7 @@ impl TreeStats {
                 .unwrap_or("no extension")
                 .to_lowercase();
 
-            *self.file_types.entry(extension).or_insert(0) +=1;
+            *self.file_types.entry(extension).or_insert(0) += 1;
 
             // Track largest file
             if let Some((_, largest_size)) = &self.largest_file {
@@ -55,8 +55,8 @@ impl TreeStats {
             }
         }
         if info.is_symlink {
-                self.symlinks +=1;
-            }
+            self.symlinks += 1;
+        }
     }
 
     pub fn finalize(&mut self) {
@@ -68,12 +68,12 @@ impl TreeStats {
     pub fn display(&self) -> String {
         let mut output = String::new();
 
-        output.push_str(&format!("\n Tree Statistics:\n"));
+        output.push_str("\n Tree Statistics:\n");
         output.push_str(&format!("Directories: {}\n", self.total_dirs));
         output.push_str(&format!("Files: {}\n", self.total_files));
         output.push_str(&format!(
             "Total size: {}\n",
-        format_size(self.total_size, DECIMAL)
+            format_size(self.total_size, DECIMAL)
         ));
 
         if self.total_files > 0 {
@@ -104,11 +104,11 @@ impl TreeStats {
         }
 
         if !self.file_types.is_empty() {
-            output.push_str(&format!("File types:\n"));
+            output.push_str("File types:\n");
             let mut types: Vec<_> = self.file_types.iter().collect();
             types.sort_by(|a, b| b.1.cmp(a.1)); // sort by count, descending
 
-            for(ext, count) in types.iter().take(10) {
+            for (ext, count) in types.iter().take(10) {
                 // show top 10
                 output.push_str(&format!("{} files: {}\n", ext, count));
             }

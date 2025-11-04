@@ -1,7 +1,7 @@
 use assert_cmd::Command;
 use predicates::prelude::*;
-use tempfile::TempDir;
 use std::fs;
+use tempfile::TempDir;
 
 use crate::common::test_helpers::TestFixture;
 
@@ -28,7 +28,7 @@ fn test_cli_basic_tree() {
     let fixture = TestFixture::new();
     fixture.create_file("file1.txt", "content");
     fixture.create_file("subdir/file2.txt", "content");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg(fixture.path())
         .assert()
@@ -41,7 +41,7 @@ fn test_cli_basic_tree() {
 fn test_cli_show_size() {
     let fixture = TestFixture::new();
     fixture.create_file("test.txt", "hello world");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--size")
         .arg(fixture.path())
@@ -54,7 +54,7 @@ fn test_cli_show_size() {
 fn test_cli_max_depth() {
     let fixture = TestFixture::new();
     fixture.create_file("level1/level2/level3/deep.txt", "content");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--max-depth")
         .arg("2")
@@ -72,7 +72,7 @@ fn test_cli_filter_extension() {
     fixture.create_file("test.rs", "rust code");
     fixture.create_file("test.py", "python code");
     fixture.create_file("test.txt", "text");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--extension")
         .arg("rs")
@@ -89,7 +89,7 @@ fn test_cli_directories_only() {
     let fixture = TestFixture::new();
     fixture.create_file("file.txt", "content");
     fixture.create_dir("directory");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--directories-only")
         .arg(fixture.path())
@@ -104,7 +104,7 @@ fn test_cli_files_only() {
     let fixture = TestFixture::new();
     fixture.create_file("file.txt", "content");
     fixture.create_dir("directory");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--files-only")
         .arg(fixture.path())
@@ -118,7 +118,7 @@ fn test_cli_files_only() {
 fn test_cli_json_output() {
     let fixture = TestFixture::new();
     fixture.create_file("test.txt", "content");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--format")
         .arg("json")
@@ -134,14 +134,14 @@ fn test_cli_output_to_file() {
     let fixture = TestFixture::new();
     fixture.create_file("input.txt", "content");
     let output_file = fixture.root_path.join("output.txt");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--output")
         .arg(&output_file)
         .arg(fixture.path())
         .assert()
         .success();
-    
+
     assert!(output_file.exists());
     let content = fs::read_to_string(&output_file).unwrap();
     assert!(content.contains("input.txt"));
@@ -152,7 +152,7 @@ fn test_cli_sort_by_size() {
     let fixture = TestFixture::new();
     fixture.create_file("small.txt", "a");
     fixture.create_file("large.txt", "this is a much larger file");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--sort")
         .arg("size")
@@ -167,12 +167,9 @@ fn test_cli_reverse_sort() {
     let fixture = TestFixture::new();
     fixture.create_file("a.txt", "content");
     fixture.create_file("z.txt", "content");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
-    cmd.arg("--reverse")
-        .arg(fixture.path())
-        .assert()
-        .success();
+    cmd.arg("--reverse").arg(fixture.path()).assert().success();
 }
 
 #[test]
@@ -180,7 +177,7 @@ fn test_cli_show_hidden() {
     let fixture = TestFixture::new();
     fixture.create_file(".hidden", "secret");
     fixture.create_file("visible.txt", "content");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--all")
         .arg(fixture.path())
@@ -193,12 +190,9 @@ fn test_cli_show_hidden() {
 fn test_cli_no_color() {
     let fixture = TestFixture::new();
     fixture.create_file("test.txt", "content");
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
-    cmd.arg("--no-color")
-        .arg(fixture.path())
-        .assert()
-        .success();
+    cmd.arg("--no-color").arg(fixture.path()).assert().success();
 }
 
 #[test]
@@ -213,7 +207,7 @@ fn test_cli_invalid_path() {
 #[test]
 fn test_cli_invalid_extension() {
     let fixture = TestFixture::new();
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--extension")
         .arg("")
@@ -225,7 +219,7 @@ fn test_cli_invalid_extension() {
 #[test]
 fn test_cli_conflicting_flags() {
     let fixture = TestFixture::new();
-    
+
     let mut cmd = Command::cargo_bin("denarborea").unwrap();
     cmd.arg("--directories-only")
         .arg("--files-only")

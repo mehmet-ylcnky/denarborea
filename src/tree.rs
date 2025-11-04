@@ -2,7 +2,7 @@ use crate::{Config, FileInfo, OutputFormat, Result, SortBy, TreeDisplay, TreeSta
 use ignore::WalkBuilder;
 use serde_json::json;
 use std::collections::HashMap;
-use std::fs::{write};
+use std::fs::write;
 use std::path::{Path, PathBuf};
 use walkdir::{DirEntry, WalkDir};
 
@@ -54,7 +54,7 @@ impl TreeVisualizer {
         if !root_path.exists() {
             return Err(format!("Path '{}' does not exist", root_path.display()).into());
         }
-        
+
         match self.config.output_format {
             OutputFormat::Tree => self.visualize_tree(root_path),
             OutputFormat::Json => self.visualize_json(root_path),
@@ -83,7 +83,7 @@ impl TreeVisualizer {
                 output.push_str(&self.display.format_path(root_path)?);
                 output.push('\n');
 
-                let entries= self.collect_entries(root_path)?;
+                let entries = self.collect_entries(root_path)?;
                 let tree = self.build_tree(entries, root_path)?;
 
                 let filtered_tree = if self.config.filter_extension.is_some() {
@@ -92,7 +92,7 @@ impl TreeVisualizer {
                     tree
                 };
 
-                self.append_tree_nodes(&mut output, &filtered_tree,"", true)?;
+                self.append_tree_nodes(&mut output, &filtered_tree, "", true)?;
 
                 if self.config.show_stats {
                     self.stats.finalize();
@@ -113,7 +113,6 @@ impl TreeVisualizer {
             }
         }
         Ok(output)
-        
     }
 
     fn visualize_tree(&mut self, root_path: &Path) -> Result<()> {
@@ -175,7 +174,7 @@ impl TreeVisualizer {
                 .build();
 
             for result in walker {
-                let entry= result?;
+                let entry = result?;
                 let path = entry.path();
 
                 if path == root_path {
@@ -191,7 +190,7 @@ impl TreeVisualizer {
                         break;
                     }
                 }
-                
+
                 let mut file_info = FileInfo::from_path(path)?;
 
                 // Calculate checksum if requested
@@ -203,7 +202,7 @@ impl TreeVisualizer {
                 self.stats.add_file(&file_info);
 
                 entries.push(file_info);
-                file_count +=1;
+                file_count += 1;
             }
         } else {
             // use walkdir for standard traversal
@@ -237,7 +236,7 @@ impl TreeVisualizer {
                 self.stats.add_file(&file_info);
 
                 entries.push(file_info);
-                file_count +=1;
+                file_count += 1;
             }
         }
         self.sort_entries(&mut entries);
@@ -249,7 +248,7 @@ impl TreeVisualizer {
         self.should_include_path(path)
     }
 
-    fn should_include_path(&self, path:&Path) -> Result<bool> {
+    fn should_include_path(&self, path: &Path) -> Result<bool> {
         let file_name = path.file_name().and_then(|n| n.to_str()).unwrap_or("");
 
         // skip hidden files unless requested
@@ -319,12 +318,12 @@ impl TreeVisualizer {
         Ok(true)
     }
 
-    fn sort_entries(&self, entries: &mut Vec<FileInfo>) {
+    fn sort_entries(&self, entries: &mut [FileInfo]) {
         entries.sort_by(|a, b| {
             let ordering = match self.config.sort_by {
                 SortBy::Name => a.name.cmp(&b.name),
                 SortBy::Size => a.size.cmp(&b.size),
-                SortBy::Time => match(a.modified_time, b.modified_time) {
+                SortBy::Time => match (a.modified_time, b.modified_time) {
                     (Some(a_time), Some(b_time)) => a_time.cmp(&b_time),
                     (Some(_), None) => std::cmp::Ordering::Greater,
                     (None, Some(_)) => std::cmp::Ordering::Less,
@@ -346,9 +345,9 @@ impl TreeVisualizer {
             };
             if self.config.reverse_sort {
                 ordering.reverse()
-             } else {
+            } else {
                 ordering
-             }
+            }
         });
     }
 
@@ -361,33 +360,36 @@ impl TreeVisualizer {
             if let Some(parent) = entry.path.parent() {
                 entries_by_parent
                     .entry(parent.to_path_buf())
-                    .or_insert_with(Vec::new)
+                    .or_default()
                     .push(entry);
             }
         }
 
         // get direct children of root
-        if let Some(direct_children) =  entries_by_parent.get(root_path) {
+        if let Some(direct_children) = entries_by_parent.get(root_path) {
             for child in direct_children {
-                let node = self.build_node(child.clone(), &entries_by_parent)?;
+                let node = Self::build_node(child.clone(), &entries_by_parent)?;
                 nodes.push(node);
             }
         }
         Ok(nodes)
     }
 
-    fn build_node(&self, info: FileInfo, entries_by_parent: &HashMap<PathBuf, Vec<FileInfo>>) -> Result<TreeNode> {
+    fn build_node(
+        info: FileInfo,
+        entries_by_parent: &HashMap<PathBuf, Vec<FileInfo>>,
+    ) -> Result<TreeNode> {
         let mut children = Vec::new();
 
         if info.is_dir {
             if let Some(child_entries) = entries_by_parent.get(&info.path) {
                 for child_info in child_entries {
-                    let child_node = self.build_node(child_info.clone(), entries_by_parent)?;
+                    let child_node = Self::build_node(child_info.clone(), entries_by_parent)?;
                     children.push(child_node);
                 }
             }
         }
-        Ok(TreeNode {info, children})
+        Ok(TreeNode { info, children })
     }
 
     fn filter_empty_directories(&self, nodes: Vec<TreeNode>) -> Vec<TreeNode> {
@@ -413,10 +415,10 @@ impl TreeVisualizer {
     }
 
     fn print_tree_nodes(&self, nodes: &[TreeNode], prefix: &str, _is_root: bool) -> Result<()> {
-        for(i, node) in nodes.iter().enumerate() {
+        for (i, node) in nodes.iter().enumerate() {
             let is_last = i == nodes.len() - 1;
-            let connector = if is_last { "'-- " } else { "|-- "};
-            let new_prefix = if is_last { "   " } else { "|   "};
+            let connector = if is_last { "'-- " } else { "|-- " };
+            let new_prefix = if is_last { "   " } else { "|   " };
 
             println!(
                 "{}{}{}",
@@ -434,9 +436,13 @@ impl TreeVisualizer {
     }
 
     fn append_tree_nodes(
-        &self, output: &mut String, nodes: &[TreeNode], prefix: &str, _is_root: bool
+        &self,
+        output: &mut String,
+        nodes: &[TreeNode],
+        prefix: &str,
+        _is_root: bool,
     ) -> Result<()> {
-        for(i, node) in nodes.iter().enumerate() {
+        for (i, node) in nodes.iter().enumerate() {
             let is_last = i == nodes.len() - 1;
             let connector = if is_last { "'-- " } else { "-- " };
             let new_prefix = if is_last { "   " } else { "|   " };
@@ -460,14 +466,14 @@ impl TreeVisualizer {
         let entries = self.collect_entries(root_path)?;
         let tree = self.build_tree(entries, root_path)?;
 
-        let json_tree = self.tree_to_json(&tree)?;
+        let json_tree = Self::tree_to_json(&tree)?;
 
         let output = json!({
             "root": root_path,
             "tree": json_tree,
             "stats": {
-                "total_files": self.count_files(&tree),
-                "total_dirs": self.count_dirs(&tree),
+                "total_files": Self::count_files(&tree),
+                "total_dirs": Self::count_dirs(&tree),
             }
         });
 
@@ -500,7 +506,7 @@ impl TreeVisualizer {
         Ok(output)
     }
 
-    fn generate_xml_output(&mut self, root_path: &Path)-> Result<String> {
+    fn generate_xml_output(&mut self, root_path: &Path) -> Result<String> {
         let mut output = String::new();
         output.push_str("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         output.push_str(&format!("<tree root=\"{}\">\n", root_path.display()));
@@ -516,7 +522,7 @@ impl TreeVisualizer {
         Ok(output)
     }
 
-    fn tree_to_json(&self, nodes: &[TreeNode]) -> Result<serde_json::Value> {
+    fn tree_to_json(nodes: &[TreeNode]) -> Result<serde_json::Value> {
         let mut json_nodes = Vec::new();
 
         for node in nodes {
@@ -530,31 +536,31 @@ impl TreeVisualizer {
             });
 
             if !node.children.is_empty() {
-                json_node["children"] = self.tree_to_json(&node.children)?;
+                json_node["children"] = Self::tree_to_json(&node.children)?;
             }
             json_nodes.push(json_node);
         }
         Ok(serde_json::Value::Array(json_nodes))
     }
 
-    fn count_files(&self, nodes:&[TreeNode]) -> usize {
+    fn count_files(nodes: &[TreeNode]) -> usize {
         let mut count = 0;
         for node in nodes {
             if !node.info.is_dir {
                 count += 1;
             }
-            count += self.count_files(&node.children);
+            count += Self::count_files(&node.children);
         }
         count
     }
 
-    fn count_dirs(&self, nodes: &[TreeNode]) -> usize {
+    fn count_dirs(nodes: &[TreeNode]) -> usize {
         let mut count = 0;
         for node in nodes {
             if node.info.is_dir {
-                count +=1;
+                count += 1;
             }
-            count += self.count_dirs(&node.children);
+            count += Self::count_dirs(&node.children);
         }
         count
     }

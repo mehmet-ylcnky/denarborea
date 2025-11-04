@@ -1,6 +1,6 @@
-use clap::{Parser};
+use clap::Parser;
+use denarborea::{utils::parse_size, Config, OutputFormat, Result, SortBy, TreeVisualizer};
 use std::path::PathBuf;
-use denarborea::{Config, OutputFormat, Result, SortBy, TreeVisualizer, utils::parse_size};
 
 #[derive(Parser)]
 #[command(name = "denarborea")]
@@ -52,7 +52,11 @@ struct Cli {
     sort: SortBy,
 
     /// Filter by file extension (comma-separated for multiple)
-    #[arg(short = 'e', long, help = "Filter by file extension (e.g., rs, py, js)")]
+    #[arg(
+        short = 'e',
+        long,
+        help = "Filter by file extension (e.g., rs, py, js)"
+    )]
     extension: Option<String>,
 
     /// Show only directories
@@ -64,19 +68,31 @@ struct Cli {
     files_only: bool,
 
     /// Minimum file size filter
-    #[arg(long, help = "Show only files larger than specified size (e.g., 1MB, 500KB")]
+    #[arg(
+        long,
+        help = "Show only files larger than specified size (e.g., 1MB, 500KB"
+    )]
     min_size: Option<String>,
 
     /// Maximum file size filter
-    #[arg(long, help = "Show only files smaller than specified size (e.g., 10MB, 2GB")]
+    #[arg(
+        long,
+        help = "Show only files smaller than specified size (e.g., 10MB, 2GB"
+    )]
     max_size: Option<String>,
 
     /// Éxclude directories/files matching pattern
-    #[arg(long, help = "Exclude path matching pattern (can be used multiple times")]
+    #[arg(
+        long,
+        help = "Exclude path matching pattern (can be used multiple times"
+    )]
     exclude: Vec<String>,
 
     /// Include directories/files matching pattern
-    #[arg(long, help = "Include path matching pattern (can be used multiple times")]
+    #[arg(
+        long,
+        help = "Include path matching pattern (can be used multiple times"
+    )]
     include: Vec<String>,
 
     /// Respect .gitignore files
@@ -117,12 +133,12 @@ struct Cli {
 
     /// Show summar statistics
     #[arg(long, help = "Show summary statistics at the end")]
-    stats:bool,
+    stats: bool,
 }
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
-    let config = Config{
+    let config = Config {
         max_depth: cli.max_depth,
         show_hidden: cli.all,
         show_size: cli.size,
@@ -138,7 +154,11 @@ fn main() -> Result<()> {
         min_size: parse_size(&cli.min_size)?,
         max_size: parse_size(&cli.max_size)?,
         exclude_patterns: cli.exclude,
-        include_patterns: if cli.include.is_empty() { None } else { Some(cli.include.join(",")) },
+        include_patterns: if cli.include.is_empty() {
+            None
+        } else {
+            Some(cli.include.join(","))
+        },
         git_ignore: cli.git_ignore,
         git_status: cli.git_status,
         limit: cli.limit,
@@ -157,6 +177,6 @@ fn main() -> Result<()> {
     } else {
         visualizer.visualize(&cli.path)?;
     }
-    
+
     Ok(())
 }

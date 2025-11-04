@@ -1,5 +1,5 @@
-use std::path::Path;
 use regex::Regex;
+use std::path::Path;
 
 pub fn is_hidden(path: &Path) -> bool {
     path.file_name()
@@ -18,19 +18,19 @@ pub fn format_permissions(mode: u32) -> String {
     let mut perms = String::new();
 
     // Owner permissions
-    perms.push(if mode & 0o400 != 0 {'r'} else {'-'});
-    perms.push(if mode & 0o200 != 0 {'w'} else {'-'});
-    perms.push(if mode & 0o100 != 0 {'x'} else {'-'});
+    perms.push(if mode & 0o400 != 0 { 'r' } else { '-' });
+    perms.push(if mode & 0o200 != 0 { 'w' } else { '-' });
+    perms.push(if mode & 0o100 != 0 { 'x' } else { '-' });
 
     // Group permissions
-    perms.push(if mode & 0o040 != 0 {'r'} else {'-'});
-    perms.push(if mode & 0o020 != 0 {'w'} else {'-'});
-    perms.push(if mode & 0o010 != 0 {'x'} else {'-'});
+    perms.push(if mode & 0o040 != 0 { 'r' } else { '-' });
+    perms.push(if mode & 0o020 != 0 { 'w' } else { '-' });
+    perms.push(if mode & 0o010 != 0 { 'x' } else { '-' });
 
     // Other permissions
-    perms.push(if mode & 0o04 != 0 {'r'} else {'-'});
-    perms.push(if mode & 0o02 != 0 {'w'} else {'-'});
-    perms.push(if mode & 0o01 != 0 {'x'} else {'-'});
+    perms.push(if mode & 0o04 != 0 { 'r' } else { '-' });
+    perms.push(if mode & 0o02 != 0 { 'w' } else { '-' });
+    perms.push(if mode & 0o01 != 0 { 'x' } else { '-' });
 
     perms
 }
@@ -38,7 +38,7 @@ pub fn format_permissions(mode: u32) -> String {
 pub fn matches_pattern(path: &Path, pattern: &str) -> bool {
     if let Ok(regex) = Regex::new(pattern) {
         if let Some(path_str) = path.to_str() {
-            return regex.is_match(path_str)
+            return regex.is_match(path_str);
         }
     }
 
@@ -49,7 +49,7 @@ pub fn matches_pattern(path: &Path, pattern: &str) -> bool {
     if pattern.contains("*") {
         let pattern_parts: Vec<&str> = pattern.split("*").collect();
         if pattern_parts.len() == 2 {
-            return path_str.starts_with(pattern_parts[0]) && path_str.ends_with(pattern_parts[1])
+            return path_str.starts_with(pattern_parts[0]) && path_str.ends_with(pattern_parts[1]);
         }
     }
 
@@ -63,7 +63,7 @@ pub fn calculate_md5(path: &Path) -> crate::Result<String> {
     let mut file = File::open(path)?;
     let mut contents = Vec::new();
     file.read_to_end(&mut contents)?;
-    
+
     let digest = md5::compute(&contents);
     Ok(format!("{:x}", digest))
 }
@@ -95,7 +95,7 @@ pub fn count_files_in_dir(path: &Path) -> (usize, usize) {
 
 pub fn parse_size(size_str: &Option<String>) -> crate::Result<Option<u64>> {
     match size_str {
-        Some(s)=> {
+        Some(s) => {
             let s = s.to_uppercase();
             let (number_part, unit) = if s.ends_with("GB") {
                 (s.trim_end_matches("GB"), 1_000_000_000)

@@ -1,9 +1,9 @@
-pub mod utils;
 pub mod config;
-pub mod git;
 pub mod display;
+pub mod git;
 pub mod stats;
 pub mod tree;
+pub mod utils;
 
 pub use config::{Config, OutputFormat, SortBy};
 pub use display::{FileInfo, TreeDisplay};

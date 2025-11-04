@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use clap::ValueEnum;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, ValueEnum, Serialize, Deserialize)]
 pub enum SortBy {
@@ -12,7 +12,7 @@ pub enum SortBy {
     #[value(name = "extension")]
     Extension,
     #[value(name = "type")]
-    Type
+    Type,
 }
 
 #[derive(Debug, Clone, Copy, ValueEnum, Serialize, Deserialize)]
@@ -26,7 +26,7 @@ pub enum OutputFormat {
     #[value(name = "csv")]
     Csv,
     #[value(name = "markdown")]
-    Markdown
+    Markdown,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -90,7 +90,7 @@ impl Default for Config {
     }
 }
 
-impl Config  {
+impl Config {
     pub fn load_from_file() -> crate::Result<Option<Self>> {
         if let Some(config_dir) = dirs::config_dir() {
             let config_path = config_dir.join("denarborea").join("config.toml");
@@ -125,7 +125,7 @@ impl Config  {
         }
     }
 
-    pub fn matches_size_filter(&self, size:u64) -> bool {
+    pub fn matches_size_filter(&self, size: u64) -> bool {
         if let Some(min_size) = self.min_size {
             if size < min_size {
                 return false;

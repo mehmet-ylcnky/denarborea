@@ -21,6 +21,31 @@ Than I found myself wanting more: *What if I could see which files changed in Gi
 
 It transforms the abstract maze of nested directories into something as clear and natural as the trees she loves to climb—with the power tools developers need today.
 
+## Development
+
+### Code Quality Standards
+
+This project follows strict code quality standards:
+
+```bash
+# Format code (required before commit)
+make fmt
+
+# Run linting checks
+make clippy
+
+# Run all tests
+make test
+
+# Run all checks (fmt + clippy + test)
+make check
+```
+
+**Pre-commit hooks** automatically run `fmt` and `clippy` checks. All code must:
+- Pass `cargo fmt --check`
+- Pass `cargo clippy -- -D warnings`
+- Have accompanying tests for new features
+
 ## Features
 
 ### 📊 Display Options

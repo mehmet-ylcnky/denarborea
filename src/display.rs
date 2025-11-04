@@ -1,6 +1,6 @@
-use crate::{Config, OutputFormat, Result, git::GitInfo, utils};
+use crate::{git::GitInfo, utils, Config, OutputFormat, Result};
 use colored::*;
-use humansize::{DECIMAL, format_size};
+use humansize::{format_size, DECIMAL};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::SystemTime;
@@ -16,7 +16,7 @@ pub struct FileInfo {
     pub modified_time: Option<SystemTime>,
     pub permissions: Option<u32>,
     pub checksum: Option<String>,
-    pub file_count:Option<usize>,
+    pub file_count: Option<usize>,
     pub dir_count: Option<usize>,
 }
 
@@ -26,12 +26,12 @@ impl FileInfo {
         let name = if let Some(file_name) = path.file_name() {
             file_name.to_string_lossy().to_string()
         } else {
-            path.to_string_lossy().to_string() 
+            path.to_string_lossy().to_string()
         };
 
         let modified_time = metadata.modified().ok();
         let permissions = Self::get_permissions(&metadata);
-        
+
         let (file_count, dir_count) = if metadata.is_dir() {
             let (files, dirs) = utils::count_files_in_dir(path);
             (Some(files), Some(dirs))
@@ -104,7 +104,7 @@ impl TreeDisplay {
         self
     }
 
-    pub fn format_path(&self, path: &Path) ->Result<String> {
+    pub fn format_path(&self, path: &Path) -> Result<String> {
         let display_path = if self.config.full_path {
             path.canonicalize()?.display().to_string()
         } else {
@@ -147,7 +147,7 @@ impl TreeDisplay {
                     status.symbol().to_string()
                 };
 
-                output.push_str(&format!("{}", status_str));
+                output.push_str(&status_str.to_string());
             }
         }
 
@@ -239,8 +239,8 @@ impl TreeDisplay {
             "is_dir": info.is_dir,
             "is_executable": info.is_executable,
             "is_symlink": info.is_symlink,
-            "modified_time": info.modified_time.map(|t| utils::format_time(t)),
-            "permissions": info.permissions.map(|p| utils::format_permissions(p)),
+            "modified_time": info.modified_time.map(utils::format_time),
+            "permissions": info.permissions.map(utils::format_permissions),
             "checksum": info.checksum,
             "file_count": info.file_count,
             "dir_count": info.dir_count,
@@ -255,11 +255,11 @@ impl TreeDisplay {
         let is_dir = info.is_dir.to_string();
         let modified = info
             .modified_time
-            .map(|t| utils::format_time(t))
+            .map(utils::format_time)
             .unwrap_or_default();
         let permissions = info
             .permissions
-            .map(|p| utils::format_permissions(p))
+            .map(utils::format_permissions)
             .unwrap_or_default();
 
         Ok(format!(
@@ -269,7 +269,7 @@ impl TreeDisplay {
     }
 
     fn format_markdown_line(&self, info: &FileInfo) -> Result<String> {
-        let icon = if info.is_dir {"--"} else {"xx"};
+        let icon = if info.is_dir { "--" } else { "xx" };
         let size = if info.is_dir {
             "-".to_string()
         } else {
@@ -277,7 +277,7 @@ impl TreeDisplay {
         };
         let modified = info
             .modified_time
-            .map(|t| utils::format_time(t))
+            .map(utils::format_time)
             .unwrap_or_default();
 
         Ok(format!(
@@ -289,7 +289,7 @@ impl TreeDisplay {
     fn format_xml_line(&self, info: &FileInfo) -> Result<String> {
         let modified = info
             .modified_time
-            .map(|t| utils::format_time(t))
+            .map(utils::format_time)
             .unwrap_or_default();
 
         Ok(format!(
@@ -316,7 +316,9 @@ impl TreeDisplay {
                 Some("js") | Some("ts") => info.name.bright_yellow().to_string(),
                 Some("html") | Some("css") => info.name.magenta().to_string(),
                 Some("md") => info.name.bright_blue().to_string(),
-                Some("json") | Some("yaml") | Some("yml") | Some("toml") => info.name.bright_green().to_string(),
+                Some("json") | Some("yaml") | Some("yml") | Some("toml") => {
+                    info.name.bright_green().to_string()
+                }
                 Some("jpg") | Some("png") | Some("gif") | Some("svg") => {
                     info.name.bright_magenta().to_string()
                 }
@@ -324,9 +326,8 @@ impl TreeDisplay {
                 Some("zip") | Some("tar") | Some("gz") | Some("7z") => {
                     info.name.red().bold().to_string()
                 }
-                _ => info.name.normal().to_string()
+                _ => info.name.normal().to_string(),
             }
         }
     }
 }
-

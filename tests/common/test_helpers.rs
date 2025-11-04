@@ -11,7 +11,10 @@ impl TestFixture {
     pub fn new() -> Self {
         let temp_dir = TempDir::new().expect("Failed to create temp directory");
         let root_path = temp_dir.path().to_path_buf();
-        Self { temp_dir, root_path }
+        Self {
+            temp_dir,
+            root_path,
+        }
     }
 
     pub fn create_file(&self, path: &str, content: &str) -> PathBuf {
@@ -32,13 +35,14 @@ impl TestFixture {
     pub fn create_symlink(&self, target: &str, link: &str) -> PathBuf {
         let link_path = self.root_path.join(link);
         let target_path = self.root_path.join(target);
-        
+
         #[cfg(unix)]
         std::os::unix::fs::symlink(&target_path, &link_path).expect("Failed to create symlink");
-        
+
         #[cfg(windows)]
-        std::os::windows::fs::symlink_file(&target_path, &link_path).expect("Failed to create symlink");
-        
+        std::os::windows::fs::symlink_file(&target_path, &link_path)
+            .expect("Failed to create symlink");
+
         link_path
     }
 
