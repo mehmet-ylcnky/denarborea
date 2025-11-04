@@ -23,6 +23,7 @@ pub struct FileViewer {
     format: ViewerFormat,
     max_lines: Option<usize>,
     max_bytes: Option<usize>,
+    delimiter: char,
 }
 
 impl FileViewer {
@@ -31,12 +32,18 @@ impl FileViewer {
             format,
             max_lines: Some(100),
             max_bytes: Some(1024 * 1024), // 1MB
+            delimiter: ',',
         }
     }
 
     pub fn with_limits(mut self, max_lines: Option<usize>, max_bytes: Option<usize>) -> Self {
         self.max_lines = max_lines;
         self.max_bytes = max_bytes;
+        self
+    }
+
+    pub fn with_delimiter(mut self, delimiter: char) -> Self {
+        self.delimiter = delimiter;
         self
     }
 
@@ -52,7 +59,7 @@ impl FileViewer {
             ViewerFormat::Json => structured::view_json_file(path),
             ViewerFormat::Yaml => structured::view_yaml_file(path),
             ViewerFormat::Toml => structured::view_toml_file(path),
-            ViewerFormat::Csv => csv_viewer::view_csv_file(path, self.max_lines),
+            ViewerFormat::Csv => csv_viewer::view_csv_file(path, self.max_lines, self.delimiter),
             ViewerFormat::Parquet => parquet_viewer::view_parquet_file(path, self.max_lines),
             ViewerFormat::Auto => unreachable!(),
         }

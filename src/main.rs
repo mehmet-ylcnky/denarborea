@@ -195,6 +195,10 @@ struct Cli {
         help = "Maximum bytes to display for binary files"
     )]
     max_bytes: usize,
+
+    /// CSV delimiter character
+    #[arg(long, default_value = ",", help = "Delimiter for CSV files")]
+    delimiter: String,
 }
 
 fn main() -> Result<()> {
@@ -202,8 +206,10 @@ fn main() -> Result<()> {
 
     // Handle file viewer mode
     if let Some(file_path) = cli.view {
+        let delimiter = cli.delimiter.chars().next().unwrap_or(',');
         let viewer = FileViewer::new(cli.viewer_format.into())
-            .with_limits(Some(cli.max_lines), Some(cli.max_bytes));
+            .with_limits(Some(cli.max_lines), Some(cli.max_bytes))
+            .with_delimiter(delimiter);
 
         match viewer.view_file(&file_path) {
             Ok(content) => {

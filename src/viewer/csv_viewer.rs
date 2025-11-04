@@ -3,9 +3,12 @@ use csv::ReaderBuilder;
 use std::fs::File;
 use std::path::Path;
 
-pub fn view_csv_file(path: &Path, max_rows: Option<usize>) -> Result<String> {
+pub fn view_csv_file(path: &Path, max_rows: Option<usize>, delimiter: char) -> Result<String> {
     let file = File::open(path)?;
-    let mut reader = ReaderBuilder::new().has_headers(true).from_reader(file);
+    let mut reader = ReaderBuilder::new()
+        .has_headers(true)
+        .delimiter(delimiter as u8)
+        .from_reader(file);
 
     let mut output = String::new();
     output.push_str(&format!("📊 CSV File: {}\n", path.display()));
