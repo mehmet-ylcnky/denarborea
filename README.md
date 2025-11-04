@@ -109,13 +109,17 @@ cargo build --release
 
 </details>
 
-### 📈 Statistics
+<details>
+<summary>📈 Statistics</summary>
+
 - Total files and directories
 - Total size with human-readable format
 - Average file size
 - Largest and smallest files
 - File type distribution (top 10)
 - Symlink count
+
+</details>
 
 ## Code Quality Standards
 
