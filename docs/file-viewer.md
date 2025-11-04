@@ -16,12 +16,12 @@ View and analyze file contents directly from the command line with syntax highli
 
 ### JSON Files
 ```bash
-denarborea --view examples/config.json
+denarborea --view docs/example_files/config.json
 ```
 
 **Output:**
 ```
-📋 JSON File: examples/config.json
+📋 JSON File: docs/example_files/config.json
 ────────────────────────────────────────────────────────────
 {
   "features": {
@@ -49,12 +49,12 @@ denarborea --view examples/config.json
 
 ### CSV Files
 ```bash
-denarborea --view examples/data.csv
+denarborea --view docs/example_files/data.csv
 ```
 
 **Output:**
 ```
-📊 CSV File: examples/data.csv
+📊 CSV File: docs/example_files/data.csv
 ────────────────────────────────────────────────────────────────────────────────
 │ name          │ age        │ city          │ occupation        │
 ├───────────────┼────────────┼───────────────┼───────────────────┤
@@ -69,12 +69,12 @@ denarborea --view examples/data.csv
 
 ### YAML Files
 ```bash
-denarborea --view examples/docker-compose.yml
+denarborea --view docs/example_files/docker-compose.yml
 ```
 
 **Output:**
 ```
-📄 YAML File: examples/docker-compose.yml
+📄 YAML File: docs/example_files/docker-compose.yml
 ────────────────────────────────────────────────────────────
 version: '3.8'
 services:
@@ -105,7 +105,7 @@ volumes:
 
 ### Text Files
 ```bash
-denarborea --view examples/README.txt
+denarborea --view docs/example_files/README.txt
 ```
 
 **Output:**
@@ -128,12 +128,12 @@ denarborea --view examples/README.txt
 
 ### Hex Dump Display
 ```bash
-denarborea --view examples/sample.bin
+denarborea --view docs/example_files/sample.bin
 ```
 
 **Output:**
 ```
-🔢 Binary File: examples/sample.bin (42 bytes)
+🔢 Binary File: docs/example_files/sample.bin (42 bytes)
 ────────────────────────────────────────────────────────────────────────────────
 File Type: Unknown Binary
 
@@ -164,12 +164,12 @@ Hex Dump:
 
 ### Schema and Data Display
 ```bash
-denarborea --view examples/employees.parquet
+denarborea --view docs/example_files/employees.parquet
 ```
 
 **Output:**
 ```
-📊 Parquet File: examples/employees.parquet
+📊 Parquet File: docs/example_files/employees.parquet
 ────────────────────────────────────────────────────────────────────────────────
 Version: 2
 Created by: parquet-cpp-arrow version 20.0.0
@@ -341,7 +341,7 @@ denarborea --view image.png --viewer-format text
 ### Combine with Tree View
 ```bash
 # View directory structure and file content
-denarborea examples/ && denarborea --view examples/config.json
+denarborea docs/example_files/ && denarborea --view docs/example_files/config.json
 ```
 
 ### Pipe to Other Tools
@@ -353,7 +353,7 @@ denarborea --view config.json --viewer-format json | jq '.features'
 ### Batch File Analysis
 ```bash
 # View multiple files
-for file in examples/*.json; do
+for file in docs/example_files/*.json; do
   echo "=== $file ==="
   denarborea --view "$file"
 done

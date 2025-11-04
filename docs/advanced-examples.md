@@ -22,7 +22,7 @@ denarborea --exclude "target" -e rs,toml --stats --git-status
 ├──   tests/
 │   ├──   integration_tests.rs
 │   └──   unit_tests.rs
-└──   examples/
+└──   docs/example_files/
     └──   basic_usage.rs
 
 📊 Tree Statistics:

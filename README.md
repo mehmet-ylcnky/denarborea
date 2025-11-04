@@ -176,7 +176,7 @@ denarborea --view config.json
 
 ## Examples
 
-The `examples/` directory contains sample files to test the file viewer functionality:
+The `docs/example_files/` directory contains sample files to test the file viewer functionality:
 
 - **config.json** - JSON configuration with nested objects and arrays
 - **data.csv** - Employee data with multiple columns
@@ -190,16 +190,16 @@ Try the file viewer with these examples:
 
 ```bash
 # View all example files
-denarborea examples/
+denarborea docs/example_files/
 
 # Test different formats
-denarborea --view examples/config.json
-denarborea --view examples/data.csv  
-denarborea --view examples/docker-compose.yml
-denarborea --view examples/Cargo.toml
-denarborea --view examples/README.txt
-denarborea --view examples/sample.bin
-denarborea --view examples/employees.parquet
+denarborea --view docs/example_files/config.json
+denarborea --view docs/example_files/data.csv  
+denarborea --view docs/example_files/docker-compose.yml
+denarborea --view docs/example_files/Cargo.toml
+denarborea --view docs/example_files/README.txt
+denarborea --view docs/example_files/sample.bin
+denarborea --view docs/example_files/employees.parquet
 ```
 
 ## Inspiration

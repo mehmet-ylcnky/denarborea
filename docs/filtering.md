@@ -49,7 +49,7 @@ denarborea -d
 ├── src/
 ├── target/
 ├── docs/
-└── examples/
+└── docs/example_files/
 ```
 
 ### Files Only

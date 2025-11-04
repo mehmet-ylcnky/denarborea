@@ -14,7 +14,7 @@ denarborea --sort name
 .
 ├── Cargo.toml
 ├── README.md
-├── examples/
+├── docs/example_files/
 ├── src/
 └── target/
 ```
@@ -33,7 +33,7 @@ denarborea --sort size -s
 ├── README.md [8.5 KB]
 ├── src/ [4.0 KB]
 ├── Cargo.toml [1.2 KB]
-└── examples/ [856 B]
+└── docs/example_files/ [856 B]
 ```
 
 ## Sort by Modification Time
@@ -50,7 +50,7 @@ denarborea --sort time -t
 ├── target/ [2024-11-04 15:45:00]
 ├── Cargo.toml [2024-11-04 15:30:22]
 ├── src/ [2024-11-04 14:20:10]
-└── examples/ [2024-11-04 12:15:30]
+└── docs/example_files/ [2024-11-04 12:15:30]
 ```
 
 ## Sort by Extension
@@ -70,7 +70,7 @@ denarborea --sort extension
 │   ├── lib.rs
 │   ├── main.rs
 │   └── utils.rs
-├── examples/
+├── docs/example_files/
 └── target/
 ```
 
@@ -84,7 +84,7 @@ denarborea --sort type
 **Output:**
 ```
 .
-├── examples/
+├── docs/example_files/
 ├── src/
 ├── target/
 ├── Cargo.toml
@@ -101,7 +101,7 @@ denarborea --sort size -r -s
 **Output:**
 ```
 .
-├── examples/ [856 B]
+├── docs/example_files/ [856 B]
 ├── Cargo.toml [1.2 KB]
 ├── src/ [4.0 KB]
 ├── README.md [8.5 KB]
@@ -123,7 +123,7 @@ denarborea --sort size -s -p -t
 ├── README.md [8.5 KB] [rw-r--r--] [2024-11-04 16:05:15]
 ├── src/ [4.0 KB] [rwxr-xr-x] [2024-11-04 14:20:10]
 ├── Cargo.toml [1.2 KB] [rw-r--r--] [2024-11-04 15:30:22]
-└── examples/ [856 B] [rwxr-xr-x] [2024-11-04 12:15:30]
+└── docs/example_files/ [856 B] [rwxr-xr-x] [2024-11-04 12:15:30]
 ```
 
 ### Sort by Time with Git Status
@@ -139,7 +139,7 @@ denarborea --sort time --git-status -t
 ├──   target/ [2024-11-04 15:45:00]
 ├── M Cargo.toml [2024-11-04 15:30:22]
 ├──   src/ [2024-11-04 14:20:10]
-└──   examples/ [2024-11-04 12:15:30]
+└──   docs/example_files/ [2024-11-04 12:15:30]
 ```
 
 ### Sort Large Directories
