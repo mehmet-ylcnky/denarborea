@@ -22,7 +22,17 @@ pub struct FileInfo {
 
 impl FileInfo {
     pub fn from_path(path: &Path) -> Result<Self> {
-        let metadata = fs::metadata(path)?;
+        let symlink_metadata = fs::symlink_metadata(path)?;
+        let is_symlink = symlink_metadata.file_type().is_symlink();
+
+        // Use regular metadata for size and other properties, but symlink_metadata for type detection
+        let metadata = if is_symlink {
+            // For symlinks, we still want to get the target's metadata for size, etc.
+            fs::metadata(path).unwrap_or(symlink_metadata)
+        } else {
+            symlink_metadata
+        };
+
         let name = if let Some(file_name) = path.file_name() {
             file_name.to_string_lossy().to_string()
         } else {
@@ -45,7 +55,7 @@ impl FileInfo {
             size: metadata.len(),
             is_dir: metadata.is_dir(),
             is_executable: Self::is_executable(&metadata),
-            is_symlink: metadata.file_type().is_symlink(),
+            is_symlink,
             modified_time,
             permissions,
             checksum: None, //will be calculated on demand

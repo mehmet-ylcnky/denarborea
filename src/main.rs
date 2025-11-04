@@ -7,7 +7,9 @@ use std::path::PathBuf;
 #[command(about = "Directory visualizer for Dena")]
 #[command(version = "0.1.0")]
 #[command(long_about = "
-    A fast and beautiful directory visualizer for Dena
+    Directory visualizer for Dena
+    
+    A fast and beautiful directory visualizer with advanced filtering, Git integration, and multiple output formats.
 ")]
 struct Cli {
     ///Directory to visualize

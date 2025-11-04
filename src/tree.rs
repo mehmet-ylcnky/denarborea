@@ -281,37 +281,40 @@ impl TreeVisualizer {
         let metadata = std::fs::metadata(path).ok();
         let is_dir = metadata.as_ref().map(|m| m.is_dir()).unwrap_or(false);
 
-        // always include directories, they might contain files we want to show
-        if is_dir {
-            return Ok(true);
-        }
-
-        // show only directories if requested
-        if self.config.directories_only {
-            return Ok(false);
-        }
-
-        // show only files if requested
+        // Apply files_only and directories_only filters first
         if self.config.files_only && is_dir {
             return Ok(false);
         }
 
-        // check size filters
-        if let Some(ref metadata) = metadata {
-            if !self.config.matches_size_filter(metadata.len()) {
-                return Ok(false);
-            }
+        if self.config.directories_only && !is_dir {
+            return Ok(false);
         }
 
-        // filter by extension if specified, only for files not directories
-        if let Some(ref _ext_list) = self.config.filter_extension {
-            let extensions = self.config.get_extension();
-            if let Some(file_ext) = path.extension().and_then(|e| e.to_str()) {
-                if !extensions.contains(&file_ext.to_lowercase()) {
+        // For directories, we need to check if they should be included
+        // (they might contain files we want to show, unless we're in files_only mode)
+        if is_dir && !self.config.files_only {
+            return Ok(true);
+        }
+
+        // For files, apply remaining filters
+        if !is_dir {
+            // check size filters
+            if let Some(ref metadata) = metadata {
+                if !self.config.matches_size_filter(metadata.len()) {
                     return Ok(false);
                 }
-            } else if !extensions.is_empty() {
-                return Ok(false);
+            }
+
+            // filter by extension if specified
+            if let Some(ref _ext_list) = self.config.filter_extension {
+                let extensions = self.config.get_extension();
+                if let Some(file_ext) = path.extension().and_then(|e| e.to_str()) {
+                    if !extensions.contains(&file_ext.to_lowercase()) {
+                        return Ok(false);
+                    }
+                } else if !extensions.is_empty() {
+                    return Ok(false);
+                }
             }
         }
 
