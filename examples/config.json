@@ -1,0 +1,15 @@
+{
+  "name": "DenArborea",
+  "version": "0.1.0",
+  "features": {
+    "tree_visualization": true,
+    "file_viewer": true,
+    "git_integration": true,
+    "multiple_formats": ["json", "csv", "yaml", "toml"]
+  },
+  "settings": {
+    "max_depth": 10,
+    "show_hidden": false,
+    "color_output": true
+  }
+}

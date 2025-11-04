@@ -6,6 +6,7 @@
 
 [![CI](https://github.com/mehmet-ylcnky/denarborea/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmet-ylcnky/denarborea/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/mehmet-ylcnky/denarborea/branch/main/graph/badge.svg)](https://codecov.io/gh/mehmet-ylcnky/denarborea)
+[![Tests](https://img.shields.io/badge/tests-124%20passing-brightgreen)](https://github.com/mehmet-ylcnky/denarborea)
 [![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org)
 [![Clippy](https://img.shields.io/badge/clippy-passing-brightgreen)](https://github.com/mehmet-ylcnky/denarborea)
 
@@ -99,6 +100,16 @@ make check
 - **XML** - Markup format with metadata
 - **CSV** - Tabular format with headers
 - **Markdown** - Table format for documentation
+
+### 📄 File Viewer
+- **Multi-format Support** - View JSON, CSV, YAML, TOML, and text files
+- **Syntax Highlighting** - Color-coded display for better readability
+- **Structured Formatting** - Pretty-printed JSON, organized CSV tables
+- **Binary File Detection** - Hex dump view for binary files with file type detection
+- **Content Limits** - Configurable line and byte limits for large files
+- **Custom Delimiters** - Support for different CSV separators (comma, semicolon, tab, pipe)
+- **Format Override** - Force specific format interpretation
+- **Error Handling** - Graceful handling of malformed files
 
 ### 📈 Statistics
 - Total files and directories
@@ -318,6 +329,148 @@ denarborea -o output.txt
 denarborea --format json -o tree.json
 ```
 
+### File Viewer
+
+```bash
+# View JSON file with pretty formatting
+denarborea --view examples/config.json
+
+# View CSV file as formatted table
+denarborea --view examples/data.csv
+
+# View YAML file with syntax highlighting
+denarborea --view examples/docker-compose.yml
+
+# View TOML configuration
+denarborea --view examples/Cargo.toml
+
+# View text file with line numbers
+denarborea --view examples/README.txt
+
+# View binary file as hex dump
+denarborea --view examples/sample.bin
+
+# View parquet file metadata and schema
+denarborea --view examples/employees.parquet
+
+# View binary file with explicit format
+denarborea --view image.png --viewer-format binary
+
+# Limit output to first 10 lines
+denarborea --view large-file.txt --max-lines 10
+
+# Limit output to first 1KB
+denarborea --view large-file.txt --max-bytes 1024
+
+# CSV with custom delimiter
+denarborea --view data.tsv --delimiter $'\t'
+
+# Force format interpretation
+denarborea --view data.txt --viewer-format json
+```
+
+**Example Outputs:**
+
+**JSON File:**
+```
+📋 JSON File: examples/config.json
+────────────────────────────────────────────────────────────
+{
+  "features": {
+    "file_viewer": true,
+    "git_integration": true,
+    "multiple_formats": [
+      "json",
+      "csv", 
+      "yaml",
+      "toml"
+    ],
+    "tree_visualization": true
+  },
+  "name": "DenArborea",
+  "settings": {
+    "color_output": true,
+    "max_depth": 10,
+    "show_hidden": false
+  },
+  "version": "0.1.0"
+}
+
+📊 Summary: Object with 4 keys
+```
+
+**CSV File:**
+```
+📊 CSV File: examples/data.csv
+────────────────────────────────────────────────────────────────────────────────
+│ name          │ age        │ city          │ occupation        │
+├───────────────┼────────────┼───────────────┼───────────────────┤
+│ Alice Johnson │ 28         │ New York      │ Software Engineer │
+│ Bob Smith     │ 34         │ San Francisco │ Data Scientist    │
+│ Carol Davis   │ 25         │ Chicago       │ Designer          │
+│ David Wilson  │ 31         │ Seattle       │ Product Manager   │
+│ Eve Brown     │ 29         │ Austin        │ DevOps Engineer   │
+
+📈 Summary: 4 columns, 5 rows shown
+```
+
+**Text File:**
+```
+📄 README.txt (Plain Text)
+────────────────────────────────────────────────────────────
+   1 │ DenArborea Examples
+   2 │ ==================
+   3 │ 
+   4 │ This directory contains example files to demonstrate the file viewer functionality.
+   5 │ 
+   6 │ Files included:
+   7 │ - config.json: JSON configuration example
+   8 │ - data.csv: CSV data with employee information
+   9 │ - docker-compose.yml: YAML service configuration
+  10 │ - Cargo.toml: TOML project configuration
+```
+
+**Binary File:**
+```
+🔢 Binary File: examples/sample.bin (42 bytes)
+────────────────────────────────────────────────────────────────────────────────
+File Type: Unknown Binary
+
+Hex Dump:
+00000000  50 4e 47 89 50 4e 47 0d  0a 1a 0a 00 00 00 0d 48  |PNG.PNG........H|
+00000010  65 6c 6c 6f 00 57 6f 72  6c 64 00 42 69 6e 61 72  |ello.World.Binar|
+00000020  79 00 44 61 74 61 ff fe  fd fc                    |y.Data....|
+```
+
+**Parquet File:**
+```
+📊 Parquet File: examples/employees.parquet
+────────────────────────────────────────────────────────────────────────────────
+Version: 2
+Created by: parquet-cpp-arrow version 20.0.0
+Number of rows: 5
+Number of row groups: 1
+
+Schema:
+  1: id (int64)
+  2: name (byte_array (string))
+  3: age (int64)
+  4: salary (double)
+  5: active (boolean)
+
+Data:
+────────────────────────────────────────────────────────────────────────────────
+│ id         │ name       │ age        │ salary     │ active     │
+├────────────┼────────────┼────────────┼────────────┼────────────┤
+│ 1          │ Alice      │ 25         │ 50000.00   │ true       │
+│ 2          │ Bob        │ 30         │ 60000.00   │ true       │
+│ 3          │ Charlie    │ 35         │ 70000.00   │ false      │
+│ 4          │ Diana      │ 28         │ 55000.00   │ true       │
+│ 5          │ Eve        │ 32         │ 65000.00   │ true       │
+
+📈 Summary: 5 columns, 5 rows shown
+```
+
 ### Advanced Examples
 
 ```bash
@@ -419,6 +572,34 @@ denarborea/
 │   └── utils.rs      # Utility functions
 ├── Cargo.toml        # Dependencies and metadata
 └── README.md         # This file
+```
+
+## Examples
+
+The `examples/` directory contains sample files to test the file viewer functionality:
+
+- **config.json** - JSON configuration with nested objects and arrays
+- **data.csv** - Employee data with multiple columns
+- **docker-compose.yml** - YAML service configuration
+- **Cargo.toml** - TOML project configuration
+- **README.txt** - Plain text documentation
+- **sample.bin** - Binary file with hex dump display
+- **employees.parquet** - Parquet file with schema and metadata
+
+Try the file viewer with these examples:
+
+```bash
+# View all example files
+denarborea examples/
+
+# Test different formats
+denarborea --view examples/config.json
+denarborea --view examples/data.csv  
+denarborea --view examples/docker-compose.yml
+denarborea --view examples/Cargo.toml
+denarborea --view examples/README.txt
+denarborea --view examples/sample.bin
+denarborea --view examples/employees.parquet
 ```
 
 ## Dependencies

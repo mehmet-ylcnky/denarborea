@@ -14,7 +14,7 @@ fn test_cli_view_text_file() {
         .arg(&file_path)
         .assert()
         .success()
-        .stdout(predicate::str::contains("📄 Text File"))
+        .stdout(predicate::str::contains("📄 test.txt (Plain Text)"))
         .stdout(predicate::str::contains("Hello World"));
 }
 

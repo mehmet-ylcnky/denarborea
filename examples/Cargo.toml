@@ -1,0 +1,20 @@
+[package]
+name = "example-project"
+version = "0.1.0"
+edition = "2021"
+authors = ["Developer <dev@example.com>"]
+description = "An example Rust project"
+license = "MIT"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1.0", features = ["full"] }
+clap = { version = "4.0", features = ["derive"] }
+
+[dev-dependencies]
+tempfile = "3.0"
+assert_cmd = "2.0"
+
+[[bin]]
+name = "main"
+path = "src/main.rs"
