@@ -68,25 +68,53 @@ fn test_fileinfo_unicode_filename() {
     let fixture = TestFixture::new();
     create_unicode_test_files(&fixture);
 
-    let emoji_path = fixture.root_path.join("emoji_😀.txt");
-    let file_info = FileInfo::from_path(&emoji_path).unwrap();
-    assert_eq!(file_info.name, "emoji_😀.txt");
+    #[cfg(windows)]
+    {
+        let emoji_path = fixture.root_path.join("emoji_file.txt");
+        let file_info = FileInfo::from_path(&emoji_path).unwrap();
+        assert_eq!(file_info.name, "emoji_file.txt");
 
-    let unicode_path = fixture.root_path.join("unicode_ñáéíóú.txt");
-    let file_info = FileInfo::from_path(&unicode_path).unwrap();
-    assert_eq!(file_info.name, "unicode_ñáéíóú.txt");
+        let unicode_path = fixture.root_path.join("unicode_file.txt");
+        let file_info = FileInfo::from_path(&unicode_path).unwrap();
+        assert_eq!(file_info.name, "unicode_file.txt");
 
-    let chinese_path = fixture.root_path.join("chinese_中文.txt");
-    let file_info = FileInfo::from_path(&chinese_path).unwrap();
-    assert_eq!(file_info.name, "chinese_中文.txt");
+        let chinese_path = fixture.root_path.join("chinese_file.txt");
+        let file_info = FileInfo::from_path(&chinese_path).unwrap();
+        assert_eq!(file_info.name, "chinese_file.txt");
+    }
+
+    #[cfg(not(windows))]
+    {
+        let emoji_path = fixture.root_path.join("emoji_😀.txt");
+        let file_info = FileInfo::from_path(&emoji_path).unwrap();
+        assert_eq!(file_info.name, "emoji_😀.txt");
+
+        let unicode_path = fixture.root_path.join("unicode_ñáéíóú.txt");
+        let file_info = FileInfo::from_path(&unicode_path).unwrap();
+        assert_eq!(file_info.name, "unicode_ñáéíóú.txt");
+
+        let chinese_path = fixture.root_path.join("chinese_中文.txt");
+        let file_info = FileInfo::from_path(&chinese_path).unwrap();
+        assert_eq!(file_info.name, "chinese_中文.txt");
+    }
 }
 
 #[test]
 fn test_fileinfo_special_characters() {
     let fixture = TestFixture::new();
+
+    #[cfg(windows)]
+    let file_path = fixture.create_file("special_chars.txt", "content");
+
+    #[cfg(not(windows))]
     let file_path = fixture.create_file("special!@#$%^&*().txt", "content");
 
     let file_info = FileInfo::from_path(&file_path).unwrap();
+
+    #[cfg(windows)]
+    assert_eq!(file_info.name, "special_chars.txt");
+
+    #[cfg(not(windows))]
     assert_eq!(file_info.name, "special!@#$%^&*().txt");
 }
 

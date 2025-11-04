@@ -1,6 +1,36 @@
-use clap::Parser;
-use denarborea::{utils::parse_size, Config, OutputFormat, Result, SortBy, TreeVisualizer};
+use clap::{Parser, ValueEnum};
+use denarborea::{
+    utils::parse_size, Config, FileViewer, OutputFormat, Result, SortBy, TreeVisualizer,
+    ViewerFormat,
+};
 use std::path::PathBuf;
+
+#[derive(ValueEnum, Clone, Debug)]
+enum CliViewerFormat {
+    Auto,
+    Text,
+    Binary,
+    Json,
+    Yaml,
+    Toml,
+    Csv,
+    Parquet,
+}
+
+impl From<CliViewerFormat> for ViewerFormat {
+    fn from(cli_format: CliViewerFormat) -> Self {
+        match cli_format {
+            CliViewerFormat::Auto => ViewerFormat::Auto,
+            CliViewerFormat::Text => ViewerFormat::Text,
+            CliViewerFormat::Binary => ViewerFormat::Binary,
+            CliViewerFormat::Json => ViewerFormat::Json,
+            CliViewerFormat::Yaml => ViewerFormat::Yaml,
+            CliViewerFormat::Toml => ViewerFormat::Toml,
+            CliViewerFormat::Csv => ViewerFormat::Csv,
+            CliViewerFormat::Parquet => ViewerFormat::Parquet,
+        }
+    }
+}
 
 #[derive(Parser)]
 #[command(name = "denarborea")]
@@ -136,10 +166,57 @@ struct Cli {
     /// Show summar statistics
     #[arg(long, help = "Show summary statistics at the end")]
     stats: bool,
+
+    /// View a specific file
+    #[arg(long, help = "View contents of a specific file")]
+    view: Option<PathBuf>,
+
+    /// File viewer format
+    #[arg(
+        long,
+        value_enum,
+        default_value = "auto",
+        help = "Format for file viewer"
+    )]
+    viewer_format: CliViewerFormat,
+
+    /// Maximum lines to show in file viewer
+    #[arg(
+        long,
+        default_value = "100",
+        help = "Maximum lines to display in file viewer"
+    )]
+    max_lines: usize,
+
+    /// Maximum bytes to show for binary files
+    #[arg(
+        long,
+        default_value = "1024",
+        help = "Maximum bytes to display for binary files"
+    )]
+    max_bytes: usize,
 }
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
+
+    // Handle file viewer mode
+    if let Some(file_path) = cli.view {
+        let viewer = FileViewer::new(cli.viewer_format.into())
+            .with_limits(Some(cli.max_lines), Some(cli.max_bytes));
+
+        match viewer.view_file(&file_path) {
+            Ok(content) => {
+                println!("{}", content);
+                return Ok(());
+            }
+            Err(e) => {
+                eprintln!("Error viewing file {}: {}", file_path.display(), e);
+                std::process::exit(1);
+            }
+        }
+    }
+
     let config = Config {
         max_depth: cli.max_depth,
         show_hidden: cli.all,

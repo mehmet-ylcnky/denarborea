@@ -71,7 +71,7 @@ impl FileInfo {
     }
 
     #[cfg(not(unix))]
-    fn is_executable(metadata: &fs::Metadata) -> bool {
+    fn is_executable(_metadata: &fs::Metadata) -> bool {
         false
     }
 
@@ -82,7 +82,7 @@ impl FileInfo {
     }
 
     #[cfg(not(unix))]
-    fn get_permissions(metadata: &fs::Metadata) -> Option<u32> {
+    fn get_permissions(_metadata: &fs::Metadata) -> Option<u32> {
         None
     }
 

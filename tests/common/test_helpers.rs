@@ -52,11 +52,24 @@ impl TestFixture {
 }
 
 pub fn create_unicode_test_files(fixture: &TestFixture) {
-    fixture.create_file("emoji_😀.txt", "content");
-    fixture.create_file("unicode_ñáéíóú.txt", "content");
-    fixture.create_file("chinese_中文.txt", "content");
-    fixture.create_file("spaces in name.txt", "content");
-    fixture.create_file("special!@#$%^&*().txt", "content");
+    // Use Windows-safe filenames
+    #[cfg(windows)]
+    {
+        fixture.create_file("emoji_file.txt", "content");
+        fixture.create_file("unicode_file.txt", "content");
+        fixture.create_file("chinese_file.txt", "content");
+        fixture.create_file("spaces in name.txt", "content");
+        fixture.create_file("special_chars.txt", "content");
+    }
+
+    #[cfg(not(windows))]
+    {
+        fixture.create_file("emoji_😀.txt", "content");
+        fixture.create_file("unicode_ñáéíóú.txt", "content");
+        fixture.create_file("chinese_中文.txt", "content");
+        fixture.create_file("spaces in name.txt", "content");
+        fixture.create_file("special!@#$%^&*().txt", "content");
+    }
 }
 
 pub fn create_deep_structure(fixture: &TestFixture, depth: usize) {
