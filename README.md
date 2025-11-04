@@ -176,31 +176,7 @@ denarborea --view config.json
 
 ## Examples
 
-The `docs/example_files/` directory contains sample files to test the file viewer functionality:
-
-- **config.json** - JSON configuration with nested objects and arrays
-- **data.csv** - Employee data with multiple columns
-- **docker-compose.yml** - YAML service configuration
-- **Cargo.toml** - TOML project configuration
-- **README.txt** - Plain text documentation
-- **sample.bin** - Binary file with hex dump display
-- **employees.parquet** - Parquet file with schema and metadata
-
-Try the file viewer with these examples:
-
-```bash
-# View all example files
-denarborea docs/example_files/
-
-# Test different formats
-denarborea --view docs/example_files/config.json
-denarborea --view docs/example_files/data.csv  
-denarborea --view docs/example_files/docker-compose.yml
-denarborea --view docs/example_files/Cargo.toml
-denarborea --view docs/example_files/README.txt
-denarborea --view docs/example_files/sample.bin
-denarborea --view docs/example_files/employees.parquet
-```
+📁 **[Example Files and Usage](docs/examples.md)** - Sample files and commands to test the file viewer functionality.
 
 ## Inspiration
 

@@ -14,6 +14,7 @@ Comprehensive guides and examples for using DenArborea effectively.
 - [Git Integration](git-integration.md) - Work with Git repositories and status
 - [Output Formats](output-formats.md) - Export in JSON, XML, CSV, and Markdown
 - [File Viewer](file-viewer.md) - View and analyze file contents
+- [Examples](examples.md) - Sample files and usage examples
 
 ## Advanced Usage
 
