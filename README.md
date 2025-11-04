@@ -55,7 +55,9 @@ make check
 
 ## Features
 
-### 📊 Display Options
+<details>
+<summary>📊 Display Options</summary>
+
 - **Tree View** - Classic tree structure with Unicode connectors
 - **File Sizes** - Human-readable format (KB, MB, GB)
 - **Permissions** - Unix-style permission display (rwxr-xr-x)
@@ -65,7 +67,11 @@ make check
 - **Symlinks** - Display symlink targets with arrows
 - **Full Paths** - Show absolute paths instead of relative
 
-### 🎨 Color Coding
+</details>
+
+<details>
+<summary>🎨 Color Coding</summary>
+
 - **Directories** - Blue
 - **Executables** - Bold green
 - **Symlinks** - Cyan
@@ -78,7 +84,11 @@ make check
 - **Images** (JPG, PNG, GIF, SVG) - Bright magenta
 - **Archives** (ZIP, TAR, GZ) - Bold red
 
-### 🔍 Filtering & Sorting
+</details>
+
+<details>
+<summary>🔍 Filtering & Sorting</summary>
+
 - **Extension Filter** - Show only specific file types
 - **Size Filters** - Min/max file size limits
 - **Pattern Matching** - Include/exclude with regex or glob patterns
@@ -89,19 +99,31 @@ make check
 - **Reverse Sort** - Reverse any sort order
 - **Limit Results** - Cap the number of displayed items
 
-### 🔧 Git Integration
+</details>
+
+<details>
+<summary>🔧 Git Integration</summary>
+
 - **Git Status** - Show file status indicators (M, A, D, ??, etc.)
 - **Status Colors** - Modified (yellow), Added (green), Deleted (red), Untracked (red)
 - **Git Ignore** - Respect .gitignore rules automatically
 
-### 📤 Output Formats
+</details>
+
+<details>
+<summary>📤 Output Formats</summary>
+
 - **Tree** - Traditional tree view
 - **JSON** - Structured hierarchical data
 - **XML** - Markup format with metadata
 - **CSV** - Tabular format with headers
 - **Markdown** - Table format for documentation
 
-### 📄 File Viewer
+</details>
+
+<details>
+<summary>📄 File Viewer</summary>
+
 - **Multi-format Support** - View JSON, CSV, YAML, TOML, and text files
 - **Syntax Highlighting** - Color-coded display for better readability
 - **Structured Formatting** - Pretty-printed JSON, organized CSV tables
@@ -110,6 +132,8 @@ make check
 - **Custom Delimiters** - Support for different CSV separators (comma, semicolon, tab, pipe)
 - **Format Override** - Force specific format interpretation
 - **Error Handling** - Graceful handling of malformed files
+
+</details>
 
 ### 📈 Statistics
 - Total files and directories
@@ -134,7 +158,8 @@ cargo build --release
 
 ## Usage
 
-### Basic Usage
+<details>
+<summary>Basic Usage</summary>
 
 ```bash
 # Show current directory
@@ -150,7 +175,10 @@ denarborea -L 2
 denarborea -a
 ```
 
-### Display Options
+</details>
+
+<details>
+<summary>Display Options</summary>
 
 ```bash
 # Show file sizes
@@ -178,7 +206,10 @@ denarborea --checksum
 denarborea --full-path
 ```
 
-### Filtering
+</details>
+
+<details>
+<summary>Filtering</summary>
 
 ```bash
 # Show only Rust files
@@ -209,7 +240,10 @@ denarborea --include "src"
 denarborea --limit 50
 ```
 
-### Sorting
+</details>
+
+<details>
+<summary>Sorting</summary>
 
 ```bash
 # Sort by name (default)
@@ -231,7 +265,10 @@ denarborea --sort type
 denarborea --sort size -r
 ```
 
-### Git Integration
+</details>
+
+<details>
+<summary>Git Integration</summary>
 
 ```bash
 # Show git status indicators
@@ -307,7 +344,10 @@ Average file size: 6.32 kB
 Largest file: tree.rs (18.64 kB)
 ```
 
-### Output Formats
+</details>
+
+<details>
+<summary>Output Formats</summary>
 
 ```bash
 # JSON output
@@ -329,7 +369,10 @@ denarborea -o output.txt
 denarborea --format json -o tree.json
 ```
 
-### File Viewer
+</details>
+
+<details>
+<summary>File Viewer</summary>
 
 ```bash
 # View JSON file with pretty formatting
@@ -471,7 +514,10 @@ Data:
 📈 Summary: 5 columns, 5 rows shown
 ```
 
-### Advanced Examples
+</details>
+
+<details>
+<summary>Advanced Examples</summary>
 
 ```bash
 # Show Rust project structure (no target dir, with stats)
@@ -573,6 +619,8 @@ denarborea/
 ├── Cargo.toml        # Dependencies and metadata
 └── README.md         # This file
 ```
+
+</details>
 
 ## Examples
 
