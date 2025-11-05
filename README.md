@@ -186,17 +186,18 @@ denarborea --view config.json
 
 📁 **[Example Files and Usage](docs/examples.md)** - Sample files and commands to test the file viewer functionality.
 
-## Inspiration
+## The Name
 
-While watching my daughter, Dena, exploring the plants near our home, I noticed how she'd stop at each one, tracing the branches with her eyes from trunk to the smallest twig. "Look, Babash," she said, pointing at one leaf, "she knows where it belongs."
+While watching my daughter, Dena, exploring the plants near our home, I noticed how she'd stop at each one, tracing the branches with her eyes from trunk to the smallest twig... the moment when she recognized where the leafes belong to.
 
 Her observation reminded me of the Unix `tree` command that has served well for decades for developers who spend their daily life in `Terminal` (including myself). Directory structures are just like trees—each folder a branch, each file a leaf, all connected in a hierarchy that makes sense once you can see it clearly.
 
-Than I found myself wanting more: *What if I could see which files changed in Git? What if I could filter by size or extension? What if I could export the structure as JSON for documentation?* That's when Dena's love for plants and my developer needs came together. **DenArborea** combines my daughter's name with *arborea* (Latin for "tree-like"), creating a tool that builds upon the classic `tree` command with modern features:
+Than I found myself asking more: *What if I could see which files changed in Git? What if I could filter by size or extension? What if I could export the structure as JSON for documentation?* That's when Dena's love for plants and my needs came together. **DenArborea** combines my daughter's name with *arborea* (Latin for "tree-like"), creating a tool that builds upon the classic `tree` command with modern features:
 - **Git integration** to see modified files at a glance (`--git-status`)
 - **Smart filtering** to find large files or specific extensions (`--min-size 100MB -e rs`)
 - **Multiple output formats** for documentation and automation (`--format json`)
 - **Rich metadata** like checksums, permissions, and statistics (`--checksum --stats`)
+- **Parsing the files** to view the content of the files in directly as Terminal output.
 
 It transforms the abstract maze of nested directories into something as clear and natural as the trees she loves to climb—with the power tools developers need today.
 
